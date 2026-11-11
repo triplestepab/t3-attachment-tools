@@ -1,6 +1,6 @@
 {
-    "name": "tomas1",
-    "version": "0.1.0",
+    "name": "t3-attachment-tools",
+    "version": "1.0.1",
     "private": true,
     "type": "module",
     "scripts": {
