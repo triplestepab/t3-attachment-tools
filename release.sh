@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "Bumping version, tagging, and pushing changes (github will build a release using the tag)"
+
 if [[ $(git branch --show-current) != main ]]; then
     printf '%s\n' "Run ./release.sh from main." >&2
     exit 1
