@@ -1,7 +1,7 @@
 {
     "id": "t3-attachment-tools",
     "name": "T3 Attachment Tools",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "minAppVersion": "1.5.0",
     "description": "Context menu actions for attachments.",
     "author": "Tomas Nilsson",
