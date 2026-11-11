@@ -27,7 +27,7 @@ export default class AttachmentToolsPlugin extends Plugin {
         var defaultSettings: AttachmentToolsSettings = {
             renamePattern1: settingsOnDisk?.renamePattern1 ?? settingsOnDisk?.renamePattern1 ?? "{documentpath}/{documentname}-pic-{number}.{extension}",
             renamePattern2: settingsOnDisk?.renamePattern2 ?? settingsOnDisk?.renamePattern2 ?? "{documentpath}/pics/{documentname}-pic-{number}.{extension}",
-            renamePattern3: settingsOnDisk?.renamePattern3 ?? settingsOnDisk?.renamePattern3 ?? "{documentpath}/{lastmodified}_{filename}.{extension}",
+            renamePattern3: settingsOnDisk?.renamePattern3 ?? settingsOnDisk?.renamePattern3 ?? "{documentpath}/{lastmodified}_{documentname}.{extension}",
             renamePattern4: settingsOnDisk?.renamePattern4 ?? settingsOnDisk?.renamePattern4 ?? "{documentpath}/{documentname:[a-zA-Z]}-{number}.{extension}",
             deleteMethod: settingsOnDisk?.deleteMethod ?? "trash",
             menuItems: settingsOnDisk?.menuItems ?? {
