@@ -1,4 +1,4 @@
-# Attachment Tools (Obsidian plugin)
+# T3 Attachment Tools (Obsidian plugin)
 
 This tool helps you organise your attachment names and their locations.
 
