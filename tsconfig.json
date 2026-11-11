@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "useDefineForClassFields": true,
+        "module": "ESNext",
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "moduleResolution": "Bundler",
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "types": [
+            "node"
+        ],
+        "noEmit": true,
+                // 
+        // Strictness and transpiler settings
+        //
+        "strict": true,
+        "noImplicitAny": false,
+        "strictNullChecks": true,
+        "noImplicitOverride": true,
+        "useUnknownInCatchVariables": false,
+        "exactOptionalPropertyTypes": true,
+        "forceConsistentCasingInFileNames": true,
+        "strictFunctionTypes": true,
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}

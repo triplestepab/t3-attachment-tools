@@ -1,0 +1,10 @@
+{
+    "id": "tomas1",
+    "name": "T3 Attachment Tools",
+    "version": "0.1.0",
+    "minAppVersion": "1.5.0",
+    "description": "Context menu actions for attachments.",
+    "author": "",
+    "authorUrl": "",
+    "isDesktopOnly": false
+}
