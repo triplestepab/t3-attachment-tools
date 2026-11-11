@@ -86,7 +86,7 @@ export function addMenuItems(source: "filetree" | "document", menu: Menu, plugin
 
     console.log("Adding menu items for source:", source);
 
-    var currentDocument = plugin.app.workspace.getActiveFile();
+    const currentDocument = source === "filetree" ? file : plugin.app.workspace.getActiveFile();
     if (!currentDocument)
         return;
 
@@ -99,7 +99,7 @@ export function addMenuItems(source: "filetree" | "document", menu: Menu, plugin
 
     menu.addItem((item) => {
         item.setTitle(file.name).onClick(() => {
-            new RenameFileModal(plugin, file).open();
+            new RenameFileModal(plugin, file, currentDocument).open();
         });
     });
 

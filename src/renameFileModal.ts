@@ -12,10 +12,10 @@ export class RenameFileModal extends Modal {
     private previewEl1?: HTMLDivElement;
     private previewEl2?: HTMLDivElement;
 
-    constructor(plugin: AttachmentToolsPlugin, file: TFile) {
+    constructor(plugin: AttachmentToolsPlugin, file: TFile, currentDocument: TFile) {
         super(plugin.app);
         this.attachment = file;
-        this.currentDocument = plugin.app.workspace.getActiveFile()!;
+        this.currentDocument = currentDocument;
     }
 
     override onOpen(): void {

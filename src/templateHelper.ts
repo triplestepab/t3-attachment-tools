@@ -13,13 +13,13 @@ export function generateFormattedPath(currentDocument: TFile, picture: TFile, fo
     // Log debug output if the picture includes the name "debug" :)
     // We might have clicked a picture directly in the file explorer OR a picture in the markdown preview.
 
-    if (picture.name.includes("debug")) {
+    // if (picture.name.includes("debug")) {
         console.log(`generateFormattedPath()`);
         if (currentDocument.path !== picture.path)
             console.log(`--- markdown=${currentDocument.path}`);
         console.log(`--- picture =${picture.path}`);
         console.log(`--- Template=${formatTo}`);
-    }
+    // }
 
     // Rooted paths needs to be temporarily disabled
 
