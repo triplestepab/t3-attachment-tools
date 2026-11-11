@@ -36,10 +36,8 @@ It's possible to configure up to four patterns. These are the defaults:
 
 1. `{documentpath}/{documentname}-pic-{number}.{extension}`
 2. `{documentpath}/pics/{documentname}-pic-{number}.{extension}`
-3. `{documentpath}/{lastmodified}_{filename}.{extension}`
+3. `{documentpath}/{lastmodified}_{documentname}.{extension}`
 4. `{documentpath}/{documentname:[a-zA-Z]}-{number}.{extension}`
-
-The third default adds the extension twice. To keep a single extension, set it to `{documentpath}/{lastmodified}_{filename}`.
 
 ## Supported tokens
 
