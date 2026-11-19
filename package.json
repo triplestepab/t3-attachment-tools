@@ -1,13 +1,19 @@
 {
     "name": "t3-attachment-tools",
     "version": "1.0.3",
+    "author": "Tomas Nilsson",
+    "description": "Attachment tools plugin for Obsidian",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/triplestepab/t3-attachment-tools"
+    },
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "node esbuild.config.mjs --watch",
-        "build": "node esbuild.config.mjs",
-        "watch": "node esbuild.config.mjs --watch",
-        "typecheck": "tsc -p tsconfig.json --noEmit"
+        "dev": "tsc -b -w",
+        "build": "tsc -b",
+        "format": "oxfmt",
+        "lint": "oxlint"
     },
     "devDependencies": {
         "@types/node": "^26.6.6",
@@ -15,7 +21,7 @@
         "obsidian": "^1.14.4",
         "typescript": "^7.0.2",
         "@stylistic/eslint-plugin": "^6.0.1",
-        "oxfmt": "^0.78.0",
-        "oxlint": "^1.93.0"
+        "oxfmt": "^0.79.0",
+        "oxlint": "^1.94.0"
     }
 }
