@@ -49,7 +49,7 @@ export function registerImageContextMenu(plugin: AttachmentToolsPlugin): void {
     );
 
     plugin.registerDomEvent(
-        document,
+        activeDocument,
         "contextmenu",
         (evt: MouseEvent) => {
             if (!(evt.target instanceof HTMLImageElement)) return;

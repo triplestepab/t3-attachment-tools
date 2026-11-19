@@ -191,8 +191,6 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         const { containerEl } = this;
         containerEl.empty();
 
-        containerEl.createEl("h1", { text: "T3 Attachment Tools" });
-
         const help = containerEl.createEl("details");
         help.setAttr("open", true);
         help.createEl("summary", { text: "Help: Supported tokens & examples" });
@@ -239,7 +237,7 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         });
         helpNote.addClass("t3-attachment-tools-help-note");
 
-        containerEl.createEl("h2", { text: "Rename patterns" });
+        new Setting(containerEl).setName("Rename patterns").setHeading();
 
         const renameSetting = new Setting(containerEl).setName("");
         renameSetting.infoEl.addClass("t3-attachment-tools-patterns-info");
@@ -256,7 +254,7 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
                 text.setPlaceholder(`Pattern ${i + 1} # Comment`)
                     .setValue(this.plugin.settings[key] as string)
                     .onChange(async (val: string) => {
-                        (this.plugin.settings as any)[key] = val.trim();
+                        (this.plugin.settings as unknown)[key] = val.trim();
                         await this.plugin.saveSettings();
                     });
                 text.inputEl.addClass("t3-attachment-tools-pattern-input");
@@ -277,9 +275,9 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
             });
 
             checkbox.checked = checked;
-            checkbox.addEventListener("change", async () => {
+            checkbox.addEventListener("change", () => {
                 setChecked(checkbox.checked);
-                await this.plugin.saveSettings();
+                void this.plugin.saveSettings();
             });
         };
 
@@ -309,7 +307,7 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
 
         // Trashcan
 
-        new Setting(containerEl).setName("Trashcan settings").setHeading();
+        new Setting(containerEl).setName("Trashcan").setHeading();
 
         addCheckbox(
             new Setting(containerEl).setName("Rename all files"),
