@@ -13,7 +13,7 @@ export default class AttachmentToolsPlugin extends Plugin {
         this.addSettingTab(new AttachmentToolsSettingTab(this.app, this));
         registerImageContextMenu(this);
 
-        console.log("Loaded T3 Attachment Tools plugin");
+        console.debug("Loaded T3 Attachment Tools plugin");
     }
 
     override onunload(): void {

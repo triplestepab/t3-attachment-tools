@@ -21,7 +21,7 @@ export class RenameFileModal extends Modal {
 
     override onOpen(): void {
         if (!this.currentDocument) {
-            console.log("No current document");
+            console.debug("No current document");
             return;
         }
 

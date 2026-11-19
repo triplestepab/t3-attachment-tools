@@ -19,10 +19,11 @@ export function generateFormattedPath(
     // We might have clicked a picture directly in the file explorer OR a picture in the markdown preview.
 
     // if (picture.name.includes("debug")) {
-    console.log(`generateFormattedPath()`);
-    if (currentDocument.path !== picture.path) console.log(`--- markdown=${currentDocument.path}`);
-    console.log(`--- picture =${picture.path}`);
-    console.log(`--- Template=${formatTo}`);
+    console.debug(`generateFormattedPath()`);
+    if (currentDocument.path !== picture.path)
+        console.debug(`--- markdown=${currentDocument.path}`);
+    console.debug(`--- picture =${picture.path}`);
+    console.debug(`--- Template=${formatTo}`);
     // }
 
     // Rooted paths needs to be temporarily disabled
@@ -38,7 +39,7 @@ export function generateFormattedPath(
     // Debug output
 
     if (picture.name.includes("debug"))
-        console.log("Tokens to process: [" + (result.match(TOKEN_REGEX) ?? []).join(", ") + "]");
+        console.debug("Tokens to process: [" + (result.match(TOKEN_REGEX) ?? []).join(", ") + "]");
 
     // Replace each token, one by one
 
@@ -65,7 +66,7 @@ export function generateFormattedPath(
 
     // debug logging
 
-    if (picture.name.includes("debug")) console.log(`--- Result=${result}`);
+    if (picture.name.includes("debug")) console.debug(`--- Result=${result}`);
 
     return result;
 }

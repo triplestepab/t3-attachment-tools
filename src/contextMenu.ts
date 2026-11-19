@@ -21,14 +21,14 @@ export function registerImageContextMenu(plugin: AttachmentToolsPlugin): void {
             // Ensure we right clicked in the file tree
 
             if (view !== "file-explorer-context-menu") {
-                console.log("Not displaying file menu for view:", view);
+                console.debug("Not displaying file menu for view:", view);
                 return;
             }
 
             // Check that we right clicked a file
             const file = abstractFile instanceof TFile ? abstractFile : null;
             if (!file) {
-                console.log("Skipping this item, not a file. Path=" + abstractFile?.path);
+                console.debug("Skipping this item, not a file. Path=" + abstractFile?.path);
                 return;
             }
 
@@ -36,7 +36,7 @@ export function registerImageContextMenu(plugin: AttachmentToolsPlugin): void {
 
             const extension = file.extension.toLowerCase();
             if (extension !== "md") {
-                console.log("Skipping this item, not a markdown file. Path=" + file.path);
+                console.debug("Skipping this item, not a markdown file. Path=" + file.path);
                 return;
             }
 
@@ -80,7 +80,7 @@ export function addMenuItems(
     plugin: AttachmentToolsPlugin,
     file: TFile,
 ): void {
-    console.log("Adding menu items for source:", source);
+    console.debug("Adding menu items for source:", source);
 
     const currentDocument = source === "filetree" ? file : plugin.app.workspace.getActiveFile();
     if (!currentDocument) return;

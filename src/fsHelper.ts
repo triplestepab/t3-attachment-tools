@@ -25,12 +25,12 @@ export async function renameFile(
     attachment: TFile,
     newName: string,
 ): Promise<TFile> {
-    console.log("renameFile(): Starting rename process");
-    console.log("--- From=" + attachment);
-    console.log("--- locatedAt=" + getFullPath(attachment));
-    console.log("--- newName=" + newName);
+    console.debug("renameFile(): Starting rename process");
+    console.debug("--- From=" + attachment);
+    console.debug("--- locatedAt=" + getFullPath(attachment));
+    console.debug("--- newName=" + newName);
     var caluclatedTarget = combinePath(attachment, newName);
-    console.log("--- caluclatedTarget=" + caluclatedTarget);
+    console.debug("--- caluclatedTarget=" + caluclatedTarget);
 
     var parentFolderOfcaluclatedTarget = caluclatedTarget.substring(
         0,
@@ -176,7 +176,7 @@ async function createFolderIfNotFound(app: App, folderPath: string): Promise<voi
     const folder = app.vault.getAbstractFileByPath(path);
 
     if (!folder) {
-        console.log("createFolderIfNotFound(): Creating folder at " + path);
+        console.debug("createFolderIfNotFound(): Creating folder at " + path);
         await app.vault.createFolder(path);
     } else if (!(folder instanceof TFolder)) {
         throw new Error(`Conflict: '${path}' is a file`);

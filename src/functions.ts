@@ -44,7 +44,7 @@ export async function moveFileToTrash(
     target: TFile,
 ): Promise<boolean> {
     try {
-        console.log(`moveFileToTrash(): Deleting ${target.path} with method ${deleteMethod}`);
+        console.debug(`moveFileToTrash(): Deleting ${target.path} with method ${deleteMethod}`);
         removeLinkFromActiveEditor(app, currentDocument, target);
         await deleteFile(app, deleteMethod, target);
 
