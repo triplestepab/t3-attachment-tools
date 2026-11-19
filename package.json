@@ -8,11 +8,11 @@
         "url": "https://github.com/triplestepab/t3-attachment-tools"
     },
     "private": true,
-    "type": "module",
-    "main": "bin/main.js",
+    "type": "commonjs",
+    "main": "main.js",
     "scripts": {
-        "dev": "tsc -b -w",
-        "build": "tsc -b",
+        "dev": "node esbuild.config.mjs --watch",
+        "build": "node esbuild.config.mjs",
         "format": "oxfmt",
         "lint": "oxlint"
     },

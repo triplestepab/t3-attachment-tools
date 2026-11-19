@@ -30,8 +30,8 @@
         //
         "target": "ES2022",
         "composite": false,
-        "sourceMap": false, /* Set to true if you want to generate sourcemap files (.map) */
-        "declaration": false, /* Set to true if you want to generate declaration files (.d.ts) */
+        "sourceMap": true, /* Set to true if you want to generate sourcemap files (.map) */
+        "declaration": true, /* Set to true if you want to generate declaration files (.d.ts) */
         "declarationMap": false, /* Set to true to generate sourcemap files for d.ts files */
         "rewriteRelativeImportExtensions": true,
         // 
@@ -45,6 +45,8 @@
         "exactOptionalPropertyTypes": true,
         "forceConsistentCasingInFileNames": true,
         "strictFunctionTypes": true,
+        // esbuild will handle the actual emission of files, so TypeScript should not emit anything itself.
+        "noEmit": true
     },
     "include": [
         "src/*.ts",
