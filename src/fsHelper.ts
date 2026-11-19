@@ -1,4 +1,4 @@
-import { FileSystemAdapter, normalizePath, TFile, TFolder, type App } from "obsidian";
+import { FileSystemAdapter, normalizePath, TFile, type App } from "obsidian";
 
 import type AttachmentToolsPlugin from "./main.ts";
 import type { DeleteMethod } from "./settings.types.ts";

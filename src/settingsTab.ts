@@ -40,7 +40,7 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
     private createTokenTable(parent: HTMLElement, title: string, tokens: string[][]): void {
         const box = parent.createDiv();
         box.addClass("t3-attachment-tools-token-section");
-        box.createEl("h4", { text: title });
+        box.createEl("b", { text: title });
 
         const table = box.createEl("table");
         table.addClass("t3-attachment-tools-token-table");
@@ -63,7 +63,7 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
      */
     private createPathLogicExamples(parent: HTMLElement): void {
         const exampleBox = parent.createDiv();
-        exampleBox.createEl("h4", { text: "Path Resolution examples" });
+        exampleBox.createEl("b", { text: "Path Resolution examples" });
 
         const groups: ExampleGroup[] = [
             {

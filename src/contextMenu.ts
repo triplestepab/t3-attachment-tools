@@ -52,9 +52,13 @@ export function registerImageContextMenu(plugin: AttachmentToolsPlugin): void {
         activeDocument,
         "contextmenu",
         (evt: MouseEvent) => {
-            if (!(evt.target instanceof HTMLImageElement)) return;
+            // Only pictures are supported for now
 
-            const file = findTFileFromHTMLElement(plugin, evt.target);
+            const file = evt.targetNode?.instanceOf(HTMLImageElement)
+                ? findTFileFromHTMLElement(plugin, evt.targetNode)
+                : null;
+
+            // Nothing found?
 
             if (!file) return;
 
