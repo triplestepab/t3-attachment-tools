@@ -9,6 +9,7 @@
     },
     "private": true,
     "type": "module",
+    "main": "bin/main.js",
     "scripts": {
         "dev": "tsc -b -w",
         "build": "tsc -b",
