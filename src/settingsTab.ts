@@ -1,6 +1,27 @@
-import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, Plugin, PluginSettingTab, type SettingDefinitionItem } from "obsidian";
 
-import { type AttachmentToolsSettings, type DeleteMethod } from "./settings.types.ts";
+import { type AttachmentToolsSettings } from "./settings.types.ts";
+
+const renamePatternKeys = [
+    "renamePattern1",
+    "renamePattern2",
+    "renamePattern3",
+    "renamePattern4",
+] as const;
+
+const menuItemKeys = [
+    "displayDelete",
+    "fileTreeDisplayRenameAll",
+    "objectDisplayRenameSingleFile",
+    "objectDisplayRenameAll",
+] as const;
+
+type MenuItemKey = (typeof menuItemKeys)[number];
+type SettingKey = (typeof renamePatternKeys)[number] | MenuItemKey | "deleteMethod";
+
+function isMenuItemKey(key: string): key is MenuItemKey {
+    return menuItemKeys.some((menuItemKey) => menuItemKey === key);
+}
 
 /**
  * Extension of the base Plugin type to include specific settings properties.
@@ -187,146 +208,139 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         });
     }
 
-    override display(): void {
-        const { containerEl } = this;
-        containerEl.empty();
+    // Menu controls bind to the existing nested data without changing saved settings.
+    override getControlValue(key: string): unknown {
+        if (isMenuItemKey(key)) return this.plugin.settings.menuItems[key];
+        return super.getControlValue(key);
+    }
 
-        const help = containerEl.createEl("details");
-        help.setAttr("open", true);
-        help.createEl("summary", { text: "Help: Supported tokens & examples" });
-        help.addClass("t3-attachment-tools-help");
+    override async setControlValue(key: string, value: unknown): Promise<void> {
+        if (isMenuItemKey(key)) {
+            if (typeof value !== "boolean") return;
+            this.plugin.settings.menuItems[key] = value;
+            await this.plugin.saveSettings();
+            return;
+        }
 
-        const helpContent = help.createDiv();
-        helpContent.addClass("t3-attachment-tools-help-content");
+        // Preserve the trimming previously applied when editing rename patterns.
+        const isPattern = renamePatternKeys.some((patternKey) => patternKey === key);
+        await super.setControlValue(
+            key,
+            isPattern && typeof value === "string" ? value.trim() : value,
+        );
+    }
 
-        this.createTokenTable(helpContent, "Attachment Tokens", [
-            ["{name}", 'Filename without extension (e.g. "foo")'],
-            [
-                "{name:[\\p{L}\\p{M} ]}",
-                "Keep only letters from all languages, combining accents, and spaces (e.g. Åäö 123! → Åäö )",
-            ],
-            ["{extension}", 'Original extension (e.g. "png")'],
-            ["{filename}", 'Full name with extension (e.g. "foo.png")'],
-            ["{path}", 'Full path to folder (e.g. "Bar/Baz")'],
-            ["{fullpath}", 'Full path including name (e.g. "Bar/Baz/foo.png")'],
-            ["{directoryname}", 'Only the folder name (e.g. "Baz")'],
-            ["{parentdirectoryname}", 'Grandparent folder name (e.g. "Bar")'],
-            ["{number}", "Auto-numbering if file already exists"],
-            ["{date}", "Current date (YYYYMMDD)"],
-            ["{time}", "Current time (HHmmss)"],
-            ["{date:FORMAT}", "Custom date format (e.g. {date:YYYY-MM-DD})"],
-            ["{lastmodified}", "Modification time (YYYYMMDD_HHmmss_mss)"],
-            ["{lastmodified:FORMAT}", "Modification time with custom format"],
-        ]);
+    override getSettingDefinitions(): SettingDefinitionItem<SettingKey>[] {
+        const help = createFragment((fragment) => {
+            const helpContent = fragment.createDiv({ cls: "t3-attachment-tools-help-content" });
 
-        this.createTokenTable(helpContent, "Document Tokens (Active Note)", [
-            ["{documentname}", "Active document name without extension"],
-            [
-                "{documentname:[\\p{L}\\p{M} ]}",
-                "Keep only letters from all languages, combining accents, and spaces (e.g. Notes 123! → Notes )",
-            ],
-            ["{documentextension}", "Active document extension only"],
-            ["{documentfullname}", "Active document including extension"],
-            ["{documentpath}", "Path of active document"],
-        ]);
+            this.createTokenTable(helpContent, "Attachment Tokens", [
+                ["{name}", 'Filename without extension (e.g. "foo")'],
+                [
+                    "{name:[\\p{L}\\p{M} ]}",
+                    "Keep only letters from all languages, combining accents, and spaces (e.g. Åäö 123! → Åäö )",
+                ],
+                ["{extension}", 'Original extension (e.g. "png")'],
+                ["{filename}", 'Full name with extension (e.g. "foo.png")'],
+                ["{path}", 'Full path to folder (e.g. "Bar/Baz")'],
+                ["{fullpath}", 'Full path including name (e.g. "Bar/Baz/foo.png")'],
+                ["{directoryname}", 'Only the folder name (e.g. "Baz")'],
+                ["{parentdirectoryname}", 'Grandparent folder name (e.g. "Bar")'],
+                ["{number}", "Auto-numbering if file already exists"],
+                ["{date}", "Current date (YYYYMMDD)"],
+                ["{time}", "Current time (HHmmss)"],
+                ["{date:FORMAT}", "Custom date format (e.g. {date:YYYY-MM-DD})"],
+                ["{lastmodified}", "Modification time (YYYYMMDD_HHmmss_mss)"],
+                ["{lastmodified:FORMAT}", "Modification time with custom format"],
+            ]);
 
-        this.createPathLogicExamples(helpContent);
+            this.createTokenTable(helpContent, "Document Tokens (Active Note)", [
+                ["{documentname}", "Active document name without extension"],
+                [
+                    "{documentname:[\\p{L}\\p{M} ]}",
+                    "Keep only letters from all languages, combining accents, and spaces (e.g. Notes 123! → Notes )",
+                ],
+                ["{documentextension}", "Active document extension only"],
+                ["{documentfullname}", "Active document including extension"],
+                ["{documentpath}", "Path of active document"],
+            ]);
 
-        const helpNote = helpContent.createEl("p", {
-            text: "💡 Note: Paths are absolute if they don't start with ./ or ../",
+            this.createPathLogicExamples(helpContent);
+
+            const helpNote = helpContent.createEl("p", {
+                text: "💡 Note: Paths are absolute if they don't start with ./ or ../",
+            });
+            helpNote.addClass("t3-attachment-tools-help-note");
         });
-        helpNote.addClass("t3-attachment-tools-help-note");
 
-        new Setting(containerEl).setName("Rename patterns").setHeading();
-
-        const renameSetting = new Setting(containerEl).setName("");
-        renameSetting.infoEl.addClass("t3-attachment-tools-patterns-info");
-        renameSetting.controlEl.addClass("t3-attachment-tools-patterns-control");
-
-        const templates: (keyof AttachmentToolsSettings)[] = [
-            "renamePattern1",
-            "renamePattern2",
-            "renamePattern3",
-            "renamePattern4",
+        return [
+            {
+                name: "Supported tokens and path examples",
+                desc: help,
+            },
+            {
+                type: "group",
+                heading: "Rename patterns",
+                items: renamePatternKeys.map((key, index) => ({
+                    name: `Rename pattern ${index + 1}`,
+                    desc: "Use tokens to name and move attachments. Leave empty to hide this pattern from the menu.",
+                    control: {
+                        type: "text",
+                        key,
+                        placeholder: `Pattern ${index + 1} # Comment`,
+                    },
+                })),
+            },
+            {
+                type: "group",
+                heading: "Right-click a picture inside a document",
+                items: [
+                    {
+                        name: "Rename single file",
+                        desc: "Show the rename action for the selected attachment.",
+                        control: { type: "toggle", key: "objectDisplayRenameSingleFile" },
+                    },
+                    {
+                        name: "Rename all",
+                        desc: "Show the action to rename all attachments in the document.",
+                        control: { type: "toggle", key: "objectDisplayRenameAll" },
+                    },
+                ],
+            },
+            {
+                type: "group",
+                heading: "Right-click a document in the file tree",
+                items: [
+                    {
+                        name: "Rename all files",
+                        desc: "Show the action to rename all attachments in the selected document.",
+                        control: { type: "toggle", key: "fileTreeDisplayRenameAll" },
+                    },
+                ],
+            },
+            {
+                type: "group",
+                heading: "Trashcan",
+                items: [
+                    {
+                        name: "Show delete attachment action",
+                        desc: "Show the delete action when right-clicking an attachment.",
+                        control: { type: "toggle", key: "displayDelete" },
+                    },
+                    {
+                        name: "Delete attachments",
+                        desc: "Choose how files are deleted.",
+                        control: {
+                            type: "dropdown",
+                            key: "deleteMethod",
+                            options: {
+                                immediately: "Immediately",
+                                trash: "To the trashcan",
+                            },
+                        },
+                    },
+                ],
+            },
         ];
-        templates.forEach((key: keyof AttachmentToolsSettings, i: number) => {
-            renameSetting.addText((text) => {
-                text.setPlaceholder(`Pattern ${i + 1} # Comment`)
-                    .setValue(this.plugin.settings[key] as string)
-                    .onChange(async (val: string) => {
-                        (this.plugin.settings as object)[key] = val.trim();
-                        await this.plugin.saveSettings();
-                    });
-                text.inputEl.addClass("t3-attachment-tools-pattern-input");
-                if (i < 3) text.inputEl.addClass("t3-attachment-tools-pattern-input-spaced");
-            });
-        });
-
-        // Menu items
-
-        const addCheckbox = (
-            setting: Setting,
-            checked: boolean,
-            setChecked: (checked: boolean) => void,
-        ): void => {
-            const checkbox = setting.controlEl.createEl("input", {
-                type: "checkbox",
-                attr: { "aria-label": setting.nameEl.textContent ?? "" },
-            });
-
-            checkbox.checked = checked;
-            checkbox.addEventListener("change", () => {
-                setChecked(checkbox.checked);
-                void this.plugin.saveSettings();
-            });
-        };
-
-        new Setting(containerEl)
-            .setName("Right-click a picture inside a document")
-            .setHeading()
-            .setDesc("If all three boxes are unticked, the entire menu will be hidden.");
-
-        addCheckbox(
-            new Setting(containerEl).setName("Rename Single File"),
-            this.plugin.settings.menuItems.objectDisplayRenameSingleFile,
-            (v) => (this.plugin.settings.menuItems.objectDisplayRenameSingleFile = v),
-        );
-        addCheckbox(
-            new Setting(containerEl).setName("Rename All"),
-            this.plugin.settings.menuItems.objectDisplayRenameAll,
-            (v) => (this.plugin.settings.menuItems.objectDisplayRenameAll = v),
-        );
-
-        new Setting(containerEl).setName("Right-click a document in the file tree").setHeading();
-
-        addCheckbox(
-            new Setting(containerEl).setName("Rename all files"),
-            this.plugin.settings.menuItems.fileTreeDisplayRenameAll,
-            (v) => (this.plugin.settings.menuItems.fileTreeDisplayRenameAll = v),
-        );
-
-        // Trashcan
-
-        new Setting(containerEl).setName("Trashcan").setHeading();
-
-        addCheckbox(
-            new Setting(containerEl).setName("Rename all files"),
-            this.plugin.settings.menuItems.displayDelete,
-            (v) => (this.plugin.settings.menuItems.displayDelete = v),
-        );
-
-        new Setting(containerEl)
-            .setName("Delete Attachments")
-            .setDesc("Choose how files are deleted.")
-            .addDropdown((d) =>
-                d
-                    .addOption("immediately", "Immediately")
-                    .addOption("trash", "To the trashcan")
-                    .setValue(this.plugin.settings.deleteMethod)
-                    .onChange(async (v: string) => {
-                        this.plugin.settings.deleteMethod = v as DeleteMethod;
-                        await this.plugin.saveSettings();
-                    }),
-            );
     }
 }
