@@ -1,10 +1,11 @@
 import { Modal, TFile } from "obsidian";
-import type AttachmentToolsPlugin from "./main";
-import { moveFileToNewLocation } from "./functions";
-import { generateFormattedPath } from "./templateHelper";
-import { extractPathComponents } from "./fsHelper";
-export class RenameFileModal extends Modal {
 
+import type AttachmentToolsPlugin from "./main.ts";
+
+import { extractPathComponents } from "./fsHelper.ts";
+import { moveFileToNewLocation } from "./functions.ts";
+import { generateFormattedPath } from "./templateHelper.ts";
+export class RenameFileModal extends Modal {
     private readonly currentDocument: TFile;
 
     private readonly attachment: TFile;
@@ -19,9 +20,8 @@ export class RenameFileModal extends Modal {
     }
 
     override onOpen(): void {
-
         if (!this.currentDocument) {
-            console.log("No current document")
+            console.log("No current document");
             return;
         }
 
@@ -29,7 +29,10 @@ export class RenameFileModal extends Modal {
         contentEl.empty();
 
         contentEl.createEl("h3", { text: "Rename file" });
-        contentEl.createEl("div", { text: `${this.attachment.path} (it's possible to use templates here)`, cls: "setting-item-description" });
+        contentEl.createEl("div", {
+            text: `${this.attachment.path} (it's possible to use templates here)`,
+            cls: "setting-item-description",
+        });
 
         const input = contentEl.createEl("input", {
             type: "text",
@@ -62,7 +65,7 @@ export class RenameFileModal extends Modal {
 
         setTimeout(() => {
             input.focus();
-            const start = 2;    // ./
+            const start = 2; // ./
             const end = start + this.attachment.basename.length;
             input.setSelectionRange(start, end);
         }, 0);
@@ -70,10 +73,13 @@ export class RenameFileModal extends Modal {
 
     private async submit(): Promise<void> {
         const value = (this.inputEl?.value ?? "").trim();
-        var success = await moveFileToNewLocation(this.app, this.currentDocument, this.attachment, value);
-        if (success)
-            this.close();
-
+        var success = await moveFileToNewLocation(
+            this.app,
+            this.currentDocument,
+            this.attachment,
+            value,
+        );
+        if (success) this.close();
     }
 
     override onClose(): void {
@@ -81,10 +87,15 @@ export class RenameFileModal extends Modal {
     }
 
     private updatePreview(): void {
-
-        const formatted = generateFormattedPath(this.currentDocument, this.attachment, this.inputEl?.value ?? "");
+        const formatted = generateFormattedPath(
+            this.currentDocument,
+            this.attachment,
+            this.inputEl?.value ?? "",
+        );
         var pieces = extractPathComponents(formatted);
         this.previewEl1?.setText(pieces.path ? `Path: ${pieces.path}` : "");
-        this.previewEl2?.setText(pieces.filenameWithExtension ? `Name: ${pieces.filenameWithExtension}` : "");
+        this.previewEl2?.setText(
+            pieces.filenameWithExtension ? `Name: ${pieces.filenameWithExtension}` : "",
+        );
     }
 }

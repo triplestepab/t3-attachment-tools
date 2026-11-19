@@ -1,12 +1,15 @@
 import { Notice, TFile } from "obsidian";
-import { getFullVaultPath } from "./fsHelper";
-import type AttachmentToolsPlugin from "./main";
 
-export function findTFileFromHTMLElement(plugin: AttachmentToolsPlugin, target: HTMLElement): TFile | undefined {
+import type AttachmentToolsPlugin from "./main.ts";
 
+import { getFullVaultPath } from "./fsHelper.ts";
+
+export function findTFileFromHTMLElement(
+    plugin: AttachmentToolsPlugin,
+    target: HTMLElement,
+): TFile | undefined {
     var pictureRelativePath = getRelativePathFromHTMLElement(plugin, target);
-    if (!pictureRelativePath)
-        return undefined;
+    if (!pictureRelativePath) return undefined;
 
     const file = plugin.app.vault.getAbstractFileByPath(pictureRelativePath);
 
@@ -15,15 +18,18 @@ export function findTFileFromHTMLElement(plugin: AttachmentToolsPlugin, target: 
         return file;
     } else {
         new Notice(`Please refresh, could not find file '${pictureRelativePath}'`);
-        console.log("findTFileFromHTMLElement(): Failed to find TFile for path:", pictureRelativePath, target);
+        console.log(
+            "findTFileFromHTMLElement(): Failed to find TFile for path:",
+            pictureRelativePath,
+            target,
+        );
     }
 }
 
 function getRelativePathFromHTMLElement(plugin: AttachmentToolsPlugin, target: HTMLElement) {
-
     // Try data-path first (this is exposed in the file tree if you click between the name and the extension)
 
-    var dataPath = target.getAttribute('data-path'); // This is already relative
+    var dataPath = target.getAttribute("data-path"); // This is already relative
     if (dataPath) {
         console.log("getRelativePath(): Found data-path attribute, using it:", dataPath);
         return dataPath;
@@ -31,8 +37,8 @@ function getRelativePathFromHTMLElement(plugin: AttachmentToolsPlugin, target: H
 
     // Fallback to src attribute of img element (this is exposed in the markdown preview)
 
-    const imgElement = target.closest('img');
-    const src = imgElement?.getAttribute('src');
+    const imgElement = target.closest("img");
+    const src = imgElement?.getAttribute("src");
 
     if (!src) {
         console.log("No picture found (img -> src attribute is empty)");
@@ -42,8 +48,8 @@ function getRelativePathFromHTMLElement(plugin: AttachmentToolsPlugin, target: H
     // Decode and normalize the path to NFC form (to avoid issues with different unicode representations)
 
     const pathWithoutProtocol = src.replace(/^app:\/\/[\w-]+\//, "");
-    var pictureFullPath = decodeURIComponent(pathWithoutProtocol).split('?')[0].trim();
-    pictureFullPath = pictureFullPath.normalize('NFC');
+    var pictureFullPath = decodeURIComponent(pathWithoutProtocol).split("?")[0].trim();
+    pictureFullPath = pictureFullPath.normalize("NFC");
 
     // Make it relative to vault path
 
@@ -58,7 +64,3 @@ function getRelativePathFromHTMLElement(plugin: AttachmentToolsPlugin, target: H
     var result = pictureFullPath.substring(fullVaultPath.length).substring(1);
     return result;
 }
-
-
-
-

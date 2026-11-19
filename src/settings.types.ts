@@ -1,4 +1,3 @@
-
 export const deleteMethods = ["immediately", "trash"] as const;
 export type DeleteMethod = (typeof deleteMethods)[number];
 
@@ -14,5 +13,5 @@ export interface AttachmentToolsSettings {
         fileTreeDisplayRenameAll: boolean;
         objectDisplayRenameSingleFile: boolean;
         objectDisplayRenameAll: boolean;
-    }
+    };
 }

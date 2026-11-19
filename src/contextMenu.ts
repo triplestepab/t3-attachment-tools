@@ -1,10 +1,11 @@
-import { Menu, Notice, TFile } from "obsidian";
-import { RenameFileModal } from "./renameFileModal";
-import type AttachmentToolsPlugin from "./main";
-import { moveAllFilesToNewLocation, moveFileToNewLocation, moveFileToTrash } from "./functions";
-import { findTFileFromHTMLElement } from "./imgHelper";
-import { generateFormattedPath } from "./templateHelper";
+import { Menu, TFile } from "obsidian";
 
+import type AttachmentToolsPlugin from "./main.ts";
+
+import { moveAllFilesToNewLocation, moveFileToNewLocation, moveFileToTrash } from "./functions.ts";
+import { findTFileFromHTMLElement } from "./imgHelper.ts";
+import { RenameFileModal } from "./renameFileModal.ts";
+import { generateFormattedPath } from "./templateHelper.ts";
 
 /**
  * Register a context menu.
@@ -15,12 +16,8 @@ import { generateFormattedPath } from "./templateHelper";
  * .. and probably more places :)
  */
 export function registerImageContextMenu(plugin: AttachmentToolsPlugin): void {
-
-
-
     plugin.registerEvent(
         plugin.app.workspace.on("file-menu", (menu, abstractFile, view) => {
-
             // Ensure we right clicked in the file tree
 
             if (view !== "file-explorer-context-menu") {
@@ -45,25 +42,21 @@ export function registerImageContextMenu(plugin: AttachmentToolsPlugin): void {
 
             // All ok, add the menu items
 
-            menu.addItem((item) => {
+            menu.addItem(() => {
                 addMenuItems("filetree", menu, plugin, file);
             });
-        })
+        }),
     );
 
     plugin.registerDomEvent(
         document,
         "contextmenu",
         (evt: MouseEvent) => {
-
-
-            if (!(evt.target instanceof HTMLImageElement))
-                return;
+            if (!(evt.target instanceof HTMLImageElement)) return;
 
             const file = findTFileFromHTMLElement(plugin, evt.target);
 
-            if (!file)
-                return;
+            if (!file) return;
 
             // We have a right-click on a file attachment! Show our custom menu.
 
@@ -74,21 +67,23 @@ export function registerImageContextMenu(plugin: AttachmentToolsPlugin): void {
             addMenuItems("document", menu, plugin, file);
             menu.showAtMouseEvent(evt);
         },
-        { capture: true } // Run before Obsidian's own context menu handler
+        { capture: true }, // Run before Obsidian's own context menu handler
     );
 }
-
 
 /**
  * The actual menu to show when right-clicking
  */
-export function addMenuItems(source: "filetree" | "document", menu: Menu, plugin: AttachmentToolsPlugin, file: TFile): void {
-
+export function addMenuItems(
+    source: "filetree" | "document",
+    menu: Menu,
+    plugin: AttachmentToolsPlugin,
+    file: TFile,
+): void {
     console.log("Adding menu items for source:", source);
 
     const currentDocument = source === "filetree" ? file : plugin.app.workspace.getActiveFile();
-    if (!currentDocument)
-        return;
+    if (!currentDocument) return;
 
     // Generate sample names
 
@@ -108,8 +103,12 @@ export function addMenuItems(source: "filetree" | "document", menu: Menu, plugin
     // rename single file
 
     if (source === "document" && plugin.settings.menuItems.objectDisplayRenameSingleFile) {
-
-        if (plugin.settings.renamePattern1 || plugin.settings.renamePattern2 || plugin.settings.renamePattern3 || plugin.settings.renamePattern4) {
+        if (
+            plugin.settings.renamePattern1 ||
+            plugin.settings.renamePattern2 ||
+            plugin.settings.renamePattern3 ||
+            plugin.settings.renamePattern4
+        ) {
             menu.addItem((item) => {
                 item.setTitle("Rename selected file").setDisabled(true);
             });
@@ -117,39 +116,49 @@ export function addMenuItems(source: "filetree" | "document", menu: Menu, plugin
 
         if (plugin.settings.renamePattern1) {
             menu.addItem((item) => {
-                item.setTitle(name1).onClick(() => moveFileToNewLocation(plugin.app, currentDocument!, file, name1));
+                item.setTitle(name1).onClick(() =>
+                    moveFileToNewLocation(plugin.app, currentDocument!, file, name1),
+                );
             });
         }
 
         if (plugin.settings.renamePattern2) {
             menu.addItem((item) => {
-                item.setTitle(name2).onClick(() => moveFileToNewLocation(plugin.app, currentDocument!, file, name2));
+                item.setTitle(name2).onClick(() =>
+                    moveFileToNewLocation(plugin.app, currentDocument!, file, name2),
+                );
             });
         }
 
         if (plugin.settings.renamePattern3) {
             menu.addItem((item) => {
-                item.setTitle(name3).onClick(() => moveFileToNewLocation(plugin.app, currentDocument!, file, name3));
+                item.setTitle(name3).onClick(() =>
+                    moveFileToNewLocation(plugin.app, currentDocument!, file, name3),
+                );
             });
         }
 
         if (plugin.settings.renamePattern4) {
             menu.addItem((item) => {
-                item.setTitle(name4).onClick(() => moveFileToNewLocation(plugin.app, currentDocument!, file, name4));
+                item.setTitle(name4).onClick(() =>
+                    moveFileToNewLocation(plugin.app, currentDocument!, file, name4),
+                );
             });
         }
-
     }
-
 
     // rename all
 
-    if ((source == "document" && plugin.settings.menuItems.objectDisplayRenameAll)
-    || (source == "filetree" && plugin.settings.menuItems.fileTreeDisplayRenameAll)) {
-
-
-        if (plugin.settings.renamePattern1 || plugin.settings.renamePattern2 || plugin.settings.renamePattern3 || plugin.settings.renamePattern4) {
-
+    if (
+        (source == "document" && plugin.settings.menuItems.objectDisplayRenameAll) ||
+        (source == "filetree" && plugin.settings.menuItems.fileTreeDisplayRenameAll)
+    ) {
+        if (
+            plugin.settings.renamePattern1 ||
+            plugin.settings.renamePattern2 ||
+            plugin.settings.renamePattern3 ||
+            plugin.settings.renamePattern4
+        ) {
             menu.addSeparator();
 
             menu.addItem((item) => {
@@ -159,44 +168,65 @@ export function addMenuItems(source: "filetree" | "document", menu: Menu, plugin
 
         if (plugin.settings.renamePattern1) {
             menu.addItem((item) => {
-                item.setTitle(name1).onClick(() => moveAllFilesToNewLocation(plugin.app, currentDocument!, plugin.settings.renamePattern1));
+                item.setTitle(name1).onClick(() =>
+                    moveAllFilesToNewLocation(
+                        plugin.app,
+                        currentDocument!,
+                        plugin.settings.renamePattern1,
+                    ),
+                );
             });
         }
 
         if (plugin.settings.renamePattern2) {
             menu.addItem((item) => {
-                item.setTitle(name2).onClick(() => moveAllFilesToNewLocation(plugin.app, currentDocument!, plugin.settings.renamePattern2));
+                item.setTitle(name2).onClick(() =>
+                    moveAllFilesToNewLocation(
+                        plugin.app,
+                        currentDocument!,
+                        plugin.settings.renamePattern2,
+                    ),
+                );
             });
         }
 
         if (plugin.settings.renamePattern3) {
             menu.addItem((item) => {
-                item.setTitle(name3).onClick(() => moveAllFilesToNewLocation(plugin.app, currentDocument!, plugin.settings.renamePattern3));
+                item.setTitle(name3).onClick(() =>
+                    moveAllFilesToNewLocation(
+                        plugin.app,
+                        currentDocument!,
+                        plugin.settings.renamePattern3,
+                    ),
+                );
             });
         }
 
         if (plugin.settings.renamePattern4) {
             menu.addItem((item) => {
-                item.setTitle(name4).onClick(() => moveAllFilesToNewLocation(plugin.app, currentDocument!, plugin.settings.renamePattern4));
+                item.setTitle(name4).onClick(() =>
+                    moveAllFilesToNewLocation(
+                        plugin.app,
+                        currentDocument!,
+                        plugin.settings.renamePattern4,
+                    ),
+                );
             });
         }
-
     }
 
     // Trash file
 
     if (plugin.settings.menuItems.displayDelete) {
-
         menu.addSeparator();
         menu.addItem((item) => {
-            var message = plugin.settings.deleteMethod === "immediately" ? "Delete immediately" : "Delete to trash";
+            var message =
+                plugin.settings.deleteMethod === "immediately"
+                    ? "Delete immediately"
+                    : "Delete to trash";
             item.setTitle(message).onClick(() => {
                 moveFileToTrash(plugin.app, currentDocument!, plugin.settings.deleteMethod, file);
             });
         });
-
     }
-
-
 }
-

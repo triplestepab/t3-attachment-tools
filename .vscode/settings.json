@@ -1,0 +1,6 @@
+{
+    // Use the ox formatter plugin (if installed in vscode)
+    "[typescript]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode"
+    },
+}

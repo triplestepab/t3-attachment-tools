@@ -1,24 +1,28 @@
 import { type TFile, normalizePath } from "obsidian";
-import { findNextFreeNumber, extractPathComponents } from "./fsHelper";
+
+import { findNextFreeNumber, extractPathComponents } from "./fsHelper.ts";
 
 const TOKEN_REGEX = /\{((?:\\[pP]\{[^}]+\}|\\.|\{[^{}]*\}|[^\\{}])*)\}/gi;
 
 /**
  * Formats a rename template against a file and returns the resulting path.
  */
-export function generateFormattedPath(currentDocument: TFile, picture: TFile, formatTo: string, isPreview = false): string {
-
+export function generateFormattedPath(
+    currentDocument: TFile,
+    picture: TFile,
+    formatTo: string,
+    isPreview = false,
+): string {
     if (!formatTo) return picture.path;
 
     // Log debug output if the picture includes the name "debug" :)
     // We might have clicked a picture directly in the file explorer OR a picture in the markdown preview.
 
     // if (picture.name.includes("debug")) {
-        console.log(`generateFormattedPath()`);
-        if (currentDocument.path !== picture.path)
-            console.log(`--- markdown=${currentDocument.path}`);
-        console.log(`--- picture =${picture.path}`);
-        console.log(`--- Template=${formatTo}`);
+    console.log(`generateFormattedPath()`);
+    if (currentDocument.path !== picture.path) console.log(`--- markdown=${currentDocument.path}`);
+    console.log(`--- picture =${picture.path}`);
+    console.log(`--- Template=${formatTo}`);
     // }
 
     // Rooted paths needs to be temporarily disabled
@@ -34,12 +38,11 @@ export function generateFormattedPath(currentDocument: TFile, picture: TFile, fo
     // Debug output
 
     if (picture.name.includes("debug"))
-        console.log('Tokens to process: [' + (result.match(TOKEN_REGEX) ?? []).join(', ') + ']');
+        console.log("Tokens to process: [" + (result.match(TOKEN_REGEX) ?? []).join(", ") + "]");
 
     // Replace each token, one by one
 
     result = result.replace(TOKEN_REGEX, (match, _key) => {
-
         let replacement = match;
         replacement = formatDate(replacement, now);
         replacement = formatLastModified(replacement, lastModified, isPreview);
@@ -48,9 +51,9 @@ export function generateFormattedPath(currentDocument: TFile, picture: TFile, fo
         return replacement;
     });
 
-    // Incremental numbers are left to process 
+    // Incremental numbers are left to process
 
-    if (result.includes("{number}") && isPreview==false) {
+    if (result.includes("{number}") && isPreview == false) {
         const nextNumber = findNextFreeNumber(picture, result);
         result = result.replaceAll("{number}", String(nextNumber ?? ""));
     }
@@ -62,8 +65,7 @@ export function generateFormattedPath(currentDocument: TFile, picture: TFile, fo
 
     // debug logging
 
-    if (picture.name.includes("debug"))
-        console.log(`--- Result=${result}`);
+    if (picture.name.includes("debug")) console.log(`--- Result=${result}`);
 
     return result;
 }
@@ -79,11 +81,10 @@ function formatDate(tokenMatch: string, now: Date): string {
     return tokenMatch;
 }
 
-function formatLastModified(tokenMatch: string, lastModified: Date, isPreview ): string {
+function formatLastModified(tokenMatch: string, lastModified: Date, isPreview): string {
     const key = tokenMatch.slice(1, -1);
 
-    if (isPreview && key.startsWith("lastmodified"))
-        return "{lastmodified}";
+    if (isPreview && key.startsWith("lastmodified")) return "{lastmodified}";
 
     if (key === "lastmodified") return formatWithMask(lastModified, "YYYYMMDD_HHmmss");
     if (key.startsWith("lastmodified:")) return formatWithMask(lastModified, key.slice(13));
@@ -91,8 +92,12 @@ function formatLastModified(tokenMatch: string, lastModified: Date, isPreview ):
     return tokenMatch;
 }
 
-function formatPathItems(file: TFile, findAndReplace: string, documentFile?: TFile, isPreview = false): string {
-
+function formatPathItems(
+    file: TFile,
+    findAndReplace: string,
+    documentFile?: TFile,
+    isPreview = false,
+): string {
     const key = findAndReplace.slice(1, -1); // remove leading { and trailing }
 
     if (key.startsWith("name:") || key.startsWith("documentname:")) {
@@ -137,16 +142,15 @@ function formatPathItems(file: TFile, findAndReplace: string, documentFile?: TFi
 }
 
 function formatWithMask(date: Date, mask: string): string {
-
     const d: Record<string, string> = {
-        "YYYY": String(date.getFullYear()),
-        "YY": String(date.getFullYear()).slice(-2),
-        "MM": String(date.getMonth() + 1).padStart(2, "0"),
-        "DD": String(date.getDate()).padStart(2, "0"),
-        "HH": String(date.getHours()).padStart(2, "0"),
-        "mm": String(date.getMinutes()).padStart(2, "0"),
-        "ss": String(date.getSeconds()).padStart(2, "0"),
-        "SSS": String(date.getMilliseconds()).padStart(3, "0"),
+        YYYY: String(date.getFullYear()),
+        YY: String(date.getFullYear()).slice(-2),
+        MM: String(date.getMonth() + 1).padStart(2, "0"),
+        DD: String(date.getDate()).padStart(2, "0"),
+        HH: String(date.getHours()).padStart(2, "0"),
+        mm: String(date.getMinutes()).padStart(2, "0"),
+        ss: String(date.getSeconds()).padStart(2, "0"),
+        SSS: String(date.getMilliseconds()).padStart(3, "0"),
     };
 
     let out = mask;
@@ -155,4 +159,3 @@ function formatWithMask(date: Date, mask: string): string {
     }
     return out;
 }
-

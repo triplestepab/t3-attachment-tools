@@ -1,5 +1,6 @@
 import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
-import {  type AttachmentToolsSettings, type DeleteMethod } from "./settings.types";
+
+import { type AttachmentToolsSettings, type DeleteMethod } from "./settings.types.ts";
 
 /**
  * Extension of the base Plugin type to include specific settings properties.
@@ -35,7 +36,6 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         super(app, plugin);
         this.plugin = plugin;
     }
-
 
     private createTokenTable(parent: HTMLElement, title: string, tokens: string[][]): void {
         const box = parent.createDiv();
@@ -74,24 +74,83 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
             {
                 title: "Absolute Paths",
                 items: [
-                    { pos: "Foo/Bar/file.png", input: "{filename}", res: "baz.png", comment: "As no path is set, the file will be moved to the root." },
-                    { pos: "Foo/Bar/file.png", input: "Bar/{filename}", res: "Bar/baz.png", comment: "Moves to a specific folder from root." },
-                    { pos: "Foo/Bar/file.png", input: "/Foo/Bar/{filename}", res: "Foo/Bar/baz.png", comment: "Leading slashes are treated as absolute vault paths." },
-                    { pos: "Foo/Bar/Pictures/file.png", input: "{documentpath}/{documentname}-pic-{number}.{extension}", res: "{documentname}-pic-1.png", comment: "Places the file next to the active document." },
-                    { pos: "Foo/Bar/Pictures/file with spaces and numbers 123!!.png", document: "Foo/Bar/Åäö file with spaces and numbers123!!.md", input: "{documentpath}/{documentname:[\\p{L}\\p{M} ]}-{number}.{extension}", res: "Foo/Bar/Åäö file with spaces and numbers-1.png", comment: "Keeps letters from all languages, combining accents, and spaces in the document name; removes digits and punctuation. Assumes number 1 is free." },
-                    { pos: "Foo/Bar/Pictures/file with spaces and numbers 123!!.png", document: "Foo/Bar/Åäö file with spaces and numbers123!!.md", input: "{documentpath}/{documentname:[a-zA-Z]}-{number}.{extension}", res: "Foo/Bar/filewithspacesandnumbers-1.png", comment: "Keeps only English letters in the document name; removes Åäö, spaces, digits, and punctuation. Assumes number 1 is free." },
-                    { pos: "Foo/Bar/Pictures/file.png", input: "{documentpath}/Pictures/{lastmodified:YYYY}/{filename}", res: "{documentpath}/Pictures/2026/file.png", comment: "Move to a subfolder relative to the current document" },
-                ]
+                    {
+                        pos: "Foo/Bar/file.png",
+                        input: "{filename}",
+                        res: "baz.png",
+                        comment: "As no path is set, the file will be moved to the root.",
+                    },
+                    {
+                        pos: "Foo/Bar/file.png",
+                        input: "Bar/{filename}",
+                        res: "Bar/baz.png",
+                        comment: "Moves to a specific folder from root.",
+                    },
+                    {
+                        pos: "Foo/Bar/file.png",
+                        input: "/Foo/Bar/{filename}",
+                        res: "Foo/Bar/baz.png",
+                        comment: "Leading slashes are treated as absolute vault paths.",
+                    },
+                    {
+                        pos: "Foo/Bar/Pictures/file.png",
+                        input: "{documentpath}/{documentname}-pic-{number}.{extension}",
+                        res: "{documentname}-pic-1.png",
+                        comment: "Places the file next to the active document.",
+                    },
+                    {
+                        pos: "Foo/Bar/Pictures/file with spaces and numbers 123!!.png",
+                        document: "Foo/Bar/Åäö file with spaces and numbers123!!.md",
+                        input: "{documentpath}/{documentname:[\\p{L}\\p{M} ]}-{number}.{extension}",
+                        res: "Foo/Bar/Åäö file with spaces and numbers-1.png",
+                        comment:
+                            "Keeps letters from all languages, combining accents, and spaces in the document name; removes digits and punctuation. Assumes number 1 is free.",
+                    },
+                    {
+                        pos: "Foo/Bar/Pictures/file with spaces and numbers 123!!.png",
+                        document: "Foo/Bar/Åäö file with spaces and numbers123!!.md",
+                        input: "{documentpath}/{documentname:[a-zA-Z]}-{number}.{extension}",
+                        res: "Foo/Bar/filewithspacesandnumbers-1.png",
+                        comment:
+                            "Keeps only English letters in the document name; removes Åäö, spaces, digits, and punctuation. Assumes number 1 is free.",
+                    },
+                    {
+                        pos: "Foo/Bar/Pictures/file.png",
+                        input: "{documentpath}/Pictures/{lastmodified:YYYY}/{filename}",
+                        res: "{documentpath}/Pictures/2026/file.png",
+                        comment: "Move to a subfolder relative to the current document",
+                    },
+                ],
             },
             {
                 title: "Relative Paths",
                 items: [
-                    { pos: "Foo/Bar/Pictures/file.png", input: "../{filename}", res: "Foo/Bar/file.png", comment: "Keep the name and move to the parent folder." },
-                    { pos: "Foo/Bar/Pictures/file.png", input: "..", res: "Foo/Bar/file.png", comment: "Shorthand to move to parent directory while keeping name." },
-                    { pos: "Foo/Bar/Pictures/file.png", input: "./{name}-{number}.{extension}", res: "Foo/Bar/Pictures/file-1.png", comment: "Add a number in current directory." },
-                    { pos: "Foo/Bar/Pictures/file.png", input: "./{lastmodified:YYYY}/{filename}", res: "Foo/Bar/Pictures/2026/file.png", comment: "Move to a subfolder relative the current one" },
-                ]
-            }
+                    {
+                        pos: "Foo/Bar/Pictures/file.png",
+                        input: "../{filename}",
+                        res: "Foo/Bar/file.png",
+                        comment: "Keep the name and move to the parent folder.",
+                    },
+                    {
+                        pos: "Foo/Bar/Pictures/file.png",
+                        input: "..",
+                        res: "Foo/Bar/file.png",
+                        comment: "Shorthand to move to parent directory while keeping name.",
+                    },
+                    {
+                        pos: "Foo/Bar/Pictures/file.png",
+                        input: "./{name}-{number}.{extension}",
+                        res: "Foo/Bar/Pictures/file-1.png",
+                        comment: "Add a number in current directory.",
+                    },
+                    {
+                        pos: "Foo/Bar/Pictures/file.png",
+                        input: "./{lastmodified:YYYY}/{filename}",
+                        res: "Foo/Bar/Pictures/2026/file.png",
+                        comment: "Move to a subfolder relative the current one",
+                    },
+                ],
+            },
         ];
 
         groups.forEach((group: ExampleGroup) => {
@@ -160,34 +219,40 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         helpContent.style.webkitUserSelect = "text";
 
         this.createTokenTable(helpContent, "Attachment Tokens", [
-            ["{name}", "Filename without extension (e.g. \"foo\")"],
-            ["{name:[\\p{L}\\p{M} ]}", "Keep only letters from all languages, combining accents, and spaces (e.g. Åäö 123! → Åäö )"],
-            ["{extension}", "Original extension (e.g. \"png\")"],
-            ["{filename}", "Full name with extension (e.g. \"foo.png\")"],
-            ["{path}", "Full path to folder (e.g. \"Bar/Baz\")"],
-            ["{fullpath}", "Full path including name (e.g. \"Bar/Baz/foo.png\")"],
-            ["{directoryname}", "Only the folder name (e.g. \"Baz\")"],
-            ["{parentdirectoryname}", "Grandparent folder name (e.g. \"Bar\")"],
+            ["{name}", 'Filename without extension (e.g. "foo")'],
+            [
+                "{name:[\\p{L}\\p{M} ]}",
+                "Keep only letters from all languages, combining accents, and spaces (e.g. Åäö 123! → Åäö )",
+            ],
+            ["{extension}", 'Original extension (e.g. "png")'],
+            ["{filename}", 'Full name with extension (e.g. "foo.png")'],
+            ["{path}", 'Full path to folder (e.g. "Bar/Baz")'],
+            ["{fullpath}", 'Full path including name (e.g. "Bar/Baz/foo.png")'],
+            ["{directoryname}", 'Only the folder name (e.g. "Baz")'],
+            ["{parentdirectoryname}", 'Grandparent folder name (e.g. "Bar")'],
             ["{number}", "Auto-numbering if file already exists"],
             ["{date}", "Current date (YYYYMMDD)"],
             ["{time}", "Current time (HHmmss)"],
             ["{date:FORMAT}", "Custom date format (e.g. {date:YYYY-MM-DD})"],
             ["{lastmodified}", "Modification time (YYYYMMDD_HHmmss_mss)"],
-            ["{lastmodified:FORMAT}", "Modification time with custom format"]
+            ["{lastmodified:FORMAT}", "Modification time with custom format"],
         ]);
 
         this.createTokenTable(helpContent, "Document Tokens (Active Note)", [
             ["{documentname}", "Active document name without extension"],
-            ["{documentname:[\\p{L}\\p{M} ]}", "Keep only letters from all languages, combining accents, and spaces (e.g. Notes 123! → Notes )"],
+            [
+                "{documentname:[\\p{L}\\p{M} ]}",
+                "Keep only letters from all languages, combining accents, and spaces (e.g. Notes 123! → Notes )",
+            ],
             ["{documentextension}", "Active document extension only"],
             ["{documentfullname}", "Active document including extension"],
-            ["{documentpath}", "Path of active document"]
+            ["{documentpath}", "Path of active document"],
         ]);
 
         this.createPathLogicExamples(helpContent);
 
         const helpNote = helpContent.createEl("p", {
-            text: "💡 Note: Paths are absolute if they don't start with ./ or ../"
+            text: "💡 Note: Paths are absolute if they don't start with ./ or ../",
         });
         helpNote.style.color = "var(--text-warning)";
         helpNote.style.marginTop = "20px";
@@ -202,7 +267,12 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         renameSetting.controlEl.style.flexDirection = "column";
         renameSetting.controlEl.style.alignItems = "stretch";
 
-        const templates: (keyof AttachmentToolsSettings)[] = ['renamePattern1', 'renamePattern2', 'renamePattern3', 'renamePattern4'];
+        const templates: (keyof AttachmentToolsSettings)[] = [
+            "renamePattern1",
+            "renamePattern2",
+            "renamePattern3",
+            "renamePattern4",
+        ];
         templates.forEach((key: keyof AttachmentToolsSettings, i: number) => {
             renameSetting.addText((text) => {
                 text.setPlaceholder(`Pattern ${i + 1} # Comment`)
@@ -216,63 +286,71 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
             });
         });
 
-
         // Menu items
 
-const addCheckbox = (
-    setting: Setting,
-    checked: boolean,
-    setChecked: (checked: boolean) => void,
-): void => {
-    const checkbox = setting.controlEl.createEl("input", {
-        type: "checkbox",
-        attr: { "aria-label": setting.nameEl.textContent ?? "" },
-    });
+        const addCheckbox = (
+            setting: Setting,
+            checked: boolean,
+            setChecked: (checked: boolean) => void,
+        ): void => {
+            const checkbox = setting.controlEl.createEl("input", {
+                type: "checkbox",
+                attr: { "aria-label": setting.nameEl.textContent ?? "" },
+            });
 
-    checkbox.checked = checked;
-    checkbox.addEventListener("change", async () => {
-        setChecked(checkbox.checked);
-        await this.plugin.saveSettings();
-    });
-};
-
-        new Setting(containerEl).
-            setName("Right-click a picture inside a document")
-            .setHeading()
-            .setDesc("If all three boxes are unticked, the entire menu will be hidden.")
-        
-        addCheckbox(new Setting(containerEl).setName("Rename Single File"), this.plugin.settings.menuItems.objectDisplayRenameSingleFile, (v) => this.plugin.settings.menuItems.objectDisplayRenameSingleFile = v);
-        addCheckbox(new Setting(containerEl).setName("Rename All"), this.plugin.settings.menuItems.objectDisplayRenameAll, (v) => this.plugin.settings.menuItems.objectDisplayRenameAll = v);
+            checkbox.checked = checked;
+            checkbox.addEventListener("change", async () => {
+                setChecked(checkbox.checked);
+                await this.plugin.saveSettings();
+            });
+        };
 
         new Setting(containerEl)
-            .setName("Right-click a document in the file tree")
+            .setName("Right-click a picture inside a document")
             .setHeading()
+            .setDesc("If all three boxes are unticked, the entire menu will be hidden.");
 
-        addCheckbox(new Setting(containerEl)
-            .setName("Rename all files"), this.plugin.settings.menuItems.fileTreeDisplayRenameAll, (v) => this.plugin.settings.menuItems.fileTreeDisplayRenameAll = v);
+        addCheckbox(
+            new Setting(containerEl).setName("Rename Single File"),
+            this.plugin.settings.menuItems.objectDisplayRenameSingleFile,
+            (v) => (this.plugin.settings.menuItems.objectDisplayRenameSingleFile = v),
+        );
+        addCheckbox(
+            new Setting(containerEl).setName("Rename All"),
+            this.plugin.settings.menuItems.objectDisplayRenameAll,
+            (v) => (this.plugin.settings.menuItems.objectDisplayRenameAll = v),
+        );
 
+        new Setting(containerEl).setName("Right-click a document in the file tree").setHeading();
+
+        addCheckbox(
+            new Setting(containerEl).setName("Rename all files"),
+            this.plugin.settings.menuItems.fileTreeDisplayRenameAll,
+            (v) => (this.plugin.settings.menuItems.fileTreeDisplayRenameAll = v),
+        );
 
         // Trashcan
 
-        new Setting(containerEl).
-                setName("Trashcan settings")
-                .setHeading()
+        new Setting(containerEl).setName("Trashcan settings").setHeading();
 
-        addCheckbox(new Setting(containerEl)
-            .setName("Rename all files"), this.plugin.settings.menuItems.displayDelete, (v) => this.plugin.settings.menuItems.displayDelete = v);
+        addCheckbox(
+            new Setting(containerEl).setName("Rename all files"),
+            this.plugin.settings.menuItems.displayDelete,
+            (v) => (this.plugin.settings.menuItems.displayDelete = v),
+        );
 
         new Setting(containerEl)
             .setName("Delete Attachments")
             .setDesc("Choose how files are deleted.")
-            .addDropdown((d) => d
-                .addOption("immediately", "Immediately")
-                .addOption("trash", "To the trashcan")
-                .setValue(this.plugin.settings.deleteMethod)
-                .onChange(async (v: string) => {
-                    this.plugin.settings.deleteMethod = v as DeleteMethod;
-                    await this.plugin.saveSettings();
-                }));
-
+            .addDropdown((d) =>
+                d
+                    .addOption("immediately", "Immediately")
+                    .addOption("trash", "To the trashcan")
+                    .setValue(this.plugin.settings.deleteMethod)
+                    .onChange(async (v: string) => {
+                        this.plugin.settings.deleteMethod = v as DeleteMethod;
+                        await this.plugin.saveSettings();
+                    }),
+            );
     }
-
 }

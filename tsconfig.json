@@ -1,21 +1,40 @@
 {
-    "compilerOptions": {
-        "target": "ES2022",
-        "useDefineForClassFields": true,
-        "module": "ESNext",
+    "compilerOptions": { /* v20260221.112400 */
+        //
+        //  Source and target settings
+        //
+        "rootDir": "src",
+        "outDir": "bin",
+        //
+        // Transpiler settings
+        // 
+        "module": "node16", // node (which is node10) is becoming obsolete. Only viable alternatives is "node16" or "nodenext"
+        "moduleResolution": "node16", // node (which is node10) is becoming obsolete. Only viable alternatives is "node16" or "nodenext"
+        "esModuleInterop": true,
+        "allowJs": true,
+        "checkJs": false,
+        "skipLibCheck": true, /* Skips type checking of all declaration files (*.d.ts), including those in node_modules. */
+        "allowUnreachableCode": true,
+        //
+        // lib & types
+        // 
         "lib": [
             "ES2022",
-            "DOM",
-            "DOM.Iterable"
+            "DOM"
         ],
-        "moduleResolution": "Bundler",
-        "skipLibCheck": true,
-        "esModuleInterop": true,
         "types": [
             "node"
         ],
-        "noEmit": true,
-                // 
+        //
+        // Output settings
+        //
+        "target": "ES2022",
+        "composite": false,
+        "sourceMap": false, /* Set to true if you want to generate sourcemap files (.map) */
+        "declaration": false, /* Set to true if you want to generate declaration files (.d.ts) */
+        "declarationMap": false, /* Set to true to generate sourcemap files for d.ts files */
+        "rewriteRelativeImportExtensions": true,
+        // 
         // Strictness and transpiler settings
         //
         "strict": true,
@@ -28,6 +47,11 @@
         "strictFunctionTypes": true,
     },
     "include": [
-        "src/**/*.ts"
+        "src/*.ts",
+        "src/**/*.ts",
+    ],
+    "exclude": [
+        "node_modules",
+        "<node_internals>/**",
     ]
 }
