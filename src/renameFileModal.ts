@@ -73,12 +73,7 @@ export class RenameFileModal extends Modal {
 
     private async submit(): Promise<void> {
         const value = (this.inputEl?.value ?? "").trim();
-        const success = await moveFileToNewLocation(
-            this.app,
-            this.currentDocument,
-            this.attachment,
-            value,
-        );
+        const success = await moveFileToNewLocation(this.app, this.attachment, value);
         if (success) this.close();
     }
 

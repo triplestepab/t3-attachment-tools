@@ -10,7 +10,6 @@ import { generateFormattedPath } from "./templateHelper.ts";
  */
 export async function moveFileToNewLocation(
     app: App,
-    currentDocument: TFile,
     attachment: TFile,
     newLocation: string,
 ): Promise<boolean> {
@@ -20,7 +19,7 @@ export async function moveFileToNewLocation(
     }
 
     try {
-        await renameFile(app, currentDocument, attachment, newLocation);
+        await renameFile(app, attachment, newLocation);
         return true;
     } catch (err: unknown) {
         if (err instanceof Error) {
@@ -45,7 +44,7 @@ export async function moveFileToTrash(
 ): Promise<boolean> {
     try {
         console.debug(`moveFileToTrash(): Deleting ${target.path} with method ${deleteMethod}`);
-        removeLinkFromActiveEditor(app, currentDocument, target);
+        await removeLinkFromActiveEditor(app, currentDocument, target);
         await deleteFile(app, deleteMethod, target);
 
         return true;
@@ -100,7 +99,7 @@ export async function moveAllFilesToNewLocation(
 
         if (attachment instanceof TFile) {
             let newName = generateFormattedPath(currentDocument, attachment, formatTo);
-            await moveFileToNewLocation(app, currentDocument, attachment, newName);
+            await moveFileToNewLocation(app, attachment, newName);
         }
     }
 

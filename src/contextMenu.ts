@@ -136,33 +136,25 @@ export function addMenuItems(
 
         if (plugin.settings.renamePattern1) {
             menu.addItem((item) => {
-                item.setTitle(name1).onClick(() =>
-                    moveFileToNewLocation(plugin.app, currentDocument, file, name1),
-                );
+                item.setTitle(name1).onClick(() => moveFileToNewLocation(plugin.app, file, name1));
             });
         }
 
         if (plugin.settings.renamePattern2) {
             menu.addItem((item) => {
-                item.setTitle(name2).onClick(() =>
-                    moveFileToNewLocation(plugin.app, currentDocument, file, name2),
-                );
+                item.setTitle(name2).onClick(() => moveFileToNewLocation(plugin.app, file, name2));
             });
         }
 
         if (plugin.settings.renamePattern3) {
             menu.addItem((item) => {
-                item.setTitle(name3).onClick(() =>
-                    moveFileToNewLocation(plugin.app, currentDocument, file, name3),
-                );
+                item.setTitle(name3).onClick(() => moveFileToNewLocation(plugin.app, file, name3));
             });
         }
 
         if (plugin.settings.renamePattern4) {
             menu.addItem((item) => {
-                item.setTitle(name4).onClick(() =>
-                    moveFileToNewLocation(plugin.app, currentDocument, file, name4),
-                );
+                item.setTitle(name4).onClick(() => moveFileToNewLocation(plugin.app, file, name4));
             });
         }
     }
@@ -244,8 +236,13 @@ export function addMenuItems(
                 plugin.settings.deleteMethod === "immediately"
                     ? "Delete immediately"
                     : "Delete to trash";
-            item.setTitle(message).onClick(() => {
-                moveFileToTrash(plugin.app, currentDocument, plugin.settings.deleteMethod, file);
+            item.setTitle(message).onClick(async () => {
+                await moveFileToTrash(
+                    plugin.app,
+                    currentDocument,
+                    plugin.settings.deleteMethod,
+                    file,
+                );
             });
         });
     }

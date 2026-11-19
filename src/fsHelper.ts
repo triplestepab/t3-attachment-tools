@@ -19,14 +19,9 @@ export function getFullVaultPath(plugin: AttachmentToolsPlugin): string {
 /**
  * Renames a file to a new name or path. Handles both absolute and relative paths.
  */
-export async function renameFile(
-    app: App,
-    currentDocument: TFile,
-    attachment: TFile,
-    newName: string,
-): Promise<TFile> {
+export async function renameFile(app: App, attachment: TFile, newName: string): Promise<TFile> {
     console.debug("renameFile(): Starting rename process");
-    console.debug("--- From=" + attachment);
+    console.debug("--- From=" + JSON.stringify(attachment));
     console.debug("--- locatedAt=" + getFullPath(attachment));
     console.debug("--- newName=" + newName);
     const caluclatedTarget = combinePath(attachment, newName);

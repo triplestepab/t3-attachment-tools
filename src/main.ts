@@ -21,6 +21,7 @@ export default class AttachmentToolsPlugin extends Plugin {
     }
 
     async loadSettings(): Promise<void> {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- This is ok
         const settingsOnDisk: Partial<AttachmentToolsSettings> = await this.loadData();
 
         const defaultSettings: AttachmentToolsSettings = {
