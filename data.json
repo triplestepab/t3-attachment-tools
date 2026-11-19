@@ -1,5 +1,5 @@
 {
-  "renamePattern1": "{documentpath}/{documentname}-pic-{number}.{extension}",
+  "renamePattern1": "a{documentpath}/{documentname}-pic-{number}.{extension}",
   "renamePattern2": "{documentpath}/pics/{documentname}-pic-{number}.{extension}",
   "renamePattern3": "{documentpath}/{lastmodified}_{documentname}.{extension}",
   "renamePattern4": "{documentpath}/{documentname:[a-zA-Z]}-{number}.{extension}",

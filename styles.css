@@ -101,3 +101,33 @@
 .t3-attachment-tools-pattern-input-spaced {
     margin-bottom: 8px;
 }
+
+.t3-attachment-tools-rename-patterns .setting-item {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.t3-attachment-tools-rename-patterns .setting-item-control {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+}
+
+.t3-attachment-tools-rename-patterns .setting-item-control > *,
+.t3-attachment-tools-rename-patterns .setting-item-control textarea {
+    width: 100%;
+}
+
+.t3-attachment-tools-rename-patterns .setting-item:has(+ .t3-attachment-tools-pattern-result) {
+    border-bottom: none;
+}
+
+.t3-attachment-tools-rename-patterns .setting-item.t3-attachment-tools-pattern-result {
+    border-top: none;
+    padding-top: 0;
+    overflow-wrap: anywhere;
+}
+
+.t3-attachment-tools-pattern-result .setting-item-control {
+    display: none;
+}

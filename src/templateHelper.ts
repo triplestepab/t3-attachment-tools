@@ -9,15 +9,31 @@ export function generatePreview(
     picture: TFile,
     formatTo: Template,
 ): Template {
-    return internalFormatter(currentDocument, picture, formatTo, true) as Template;
+    return internalFormatter(currentDocument, picture, formatTo, true, false) as Template;
+}
+
+export function validateTemplate(
+    currentDocument: TFile,
+    picture: TFile,
+    formatTo: Template,
+): boolean {
+    const result = internalFormatter(currentDocument, picture, formatTo, false, false);
+
+    if (result.includes("{") || result.includes("}")) {
+        console.warn("Template contains unresolved braces:", result);
+        return false;
+    }
+
+    return true;
 }
 
 export function generateFormattedPath(
     currentDocument: TFile,
     picture: TFile,
     formatTo: Template,
+    checkFilesystem = true,
 ): string {
-    return internalFormatter(currentDocument, picture, formatTo, false);
+    return internalFormatter(currentDocument, picture, formatTo, false, checkFilesystem);
 }
 
 /**
@@ -28,6 +44,7 @@ function internalFormatter(
     picture: TFile,
     formatTo: Template,
     isPreview = false,
+    checkFilesystem = true,
 ): string {
     if (!formatTo) return picture.path;
 
@@ -71,7 +88,7 @@ function internalFormatter(
     // Incremental numbers are left to process
 
     if (result.includes("{number}") && isPreview == false) {
-        const nextNumber = findNextFreeNumber(picture, result);
+        const nextNumber = checkFilesystem ? findNextFreeNumber(picture, result) : 1;
         result = result.replaceAll("{number}", String(nextNumber ?? ""));
     }
 

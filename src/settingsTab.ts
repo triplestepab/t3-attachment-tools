@@ -1,6 +1,15 @@
-import { App, Plugin, PluginSettingTab, type SettingDefinitionItem } from "obsidian";
+import {
+    App,
+    Plugin,
+    PluginSettingTab,
+    type SettingDefinition,
+    type SettingDefinitionItem,
+} from "obsidian";
+
+import type { Template } from "./fsHelper.ts";
 
 import { type AttachmentToolsSettings } from "./settings.types.ts";
+import { generateFormattedPath, validateTemplate } from "./templateHelper.ts";
 
 const renamePatternKeys = [
     "renamePattern1",
@@ -230,6 +239,22 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         );
     }
 
+    private validatePattern(value: string): string {
+        const pattern = value.trim() as Template;
+        if (!pattern) return "✅ Disabled (empty pattern).";
+
+        const file = this.app.workspace.getActiveFile();
+        if (!file) return "❌ Open a file to preview this pattern.";
+
+        try {
+            const valid = validateTemplate(file, file, pattern);
+            const result = generateFormattedPath(file, file, pattern, false);
+            return `${valid ? "✅" : "❌"} ${result}`;
+        } catch (error) {
+            return `❌ ${error instanceof Error ? error.message : "Could not render this pattern."}`;
+        }
+    }
+
     override getSettingDefinitions(): SettingDefinitionItem<SettingKey>[] {
         const help = createFragment((fragment) => {
             const helpContent = fragment.createDiv({ cls: "t3-attachment-tools-help-content" });
@@ -281,15 +306,35 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
             {
                 type: "group",
                 heading: "Rename patterns",
-                items: renamePatternKeys.map((key, index) => ({
-                    name: `Rename pattern ${index + 1}`,
-                    desc: "Use tokens to name and move attachments. Leave empty to hide this pattern from the menu.",
-                    control: {
-                        type: "text",
-                        key,
-                        placeholder: `Pattern ${index + 1} # Comment`,
-                    },
-                })),
+                cls: "t3-attachment-tools-rename-patterns",
+                items: renamePatternKeys.flatMap<SettingDefinition<SettingKey>>((key, index) => {
+                    const resultEl = createDiv({
+                        attr: { "aria-live": "polite", role: "status" },
+                    });
+
+                    return [
+                        {
+                            name: `Rename pattern ${index + 1}`,
+                            desc: "Use tokens to name and move attachments. Leave empty to hide this pattern from the menu.",
+                            control: {
+                                type: "textarea",
+                                key,
+                                rows: 3,
+                                placeholder: `Pattern ${index + 1} # Comment`,
+                                validate: (value: string) =>
+                                    resultEl?.setText(this.validatePattern(value)),
+                            },
+                        },
+                        {
+                            name: "",
+                            searchable: false,
+                            render: (setting) => {
+                                setting.settingEl.addClass("t3-attachment-tools-pattern-result");
+                                setting.descEl.appendChild(resultEl);
+                            },
+                        },
+                    ];
+                }),
             },
             {
                 type: "group",
