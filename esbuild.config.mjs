@@ -1,4 +1,5 @@
 import esbuild from "esbuild";
+import { execFileSync } from "node:child_process";
 
 const isWatch = process.argv.includes("--watch");
 
@@ -11,7 +12,17 @@ const context = await esbuild.context({
     outfile: "main.js",
     sourcemap: true,
     external: ["obsidian"],
-    logLevel: "info"
+    logLevel: "info",
+    plugins: [{
+        name: "oxfmt",
+        setup(build) {
+            build.onStart(() => {
+                execFileSync(process.execPath, ["node_modules/oxfmt/bin/oxfmt", "src"], {
+                    stdio: "inherit",
+                });
+            });
+        },
+    }],
 });
 
 if (isWatch) {
