@@ -38,7 +38,7 @@ export class RenameFileModal extends Modal {
             type: "text",
             value: "./" + this.attachment.name,
         });
-        input.style.width = "100%";
+        input.addClass("t3-attachment-tools-rename-input");
         this.inputEl = input;
 
         this.previewEl1 = contentEl.createDiv({ cls: "setting-item-description" });

@@ -1,0 +1,103 @@
+.t3-attachment-tools-rename-input {
+    width: 100%;
+}
+
+.t3-attachment-tools-token-section {
+    margin-bottom: 20px;
+}
+
+.t3-attachment-tools-token-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.t3-attachment-tools-token-row {
+    border-bottom: 1px solid var(--background-modifier-border-focus);
+}
+
+.t3-attachment-tools-token-name {
+    user-select: text;
+    cursor: text;
+}
+
+.t3-attachment-tools-token-description {
+    color: var(--text-muted);
+    padding-left: 8px;
+    user-select: text;
+}
+
+.t3-attachment-tools-example-heading {
+    font-weight: bold;
+}
+
+.t3-attachment-tools-example-group {
+    margin-top: 15px;
+}
+
+.t3-attachment-tools-example {
+    margin-bottom: 12px;
+    padding-left: 12px;
+    border-left: 2px solid var(--interactive-accent);
+}
+
+.t3-attachment-tools-example-comment {
+    font-size: 0.85em;
+    font-style: italic;
+    color: var(--text-accent);
+    margin-bottom: 4px;
+}
+
+.t3-attachment-tools-example-context {
+    font-size: 0.8em;
+    color: var(--text-muted);
+}
+
+.t3-attachment-tools-example-input {
+    user-select: text;
+    background-color: var(--background-primary-alt);
+}
+
+.t3-attachment-tools-example-result {
+    color: var(--text-success);
+    font-weight: bold;
+    user-select: text;
+}
+
+.t3-attachment-tools-help {
+    margin-bottom: 20px;
+}
+
+.t3-attachment-tools-help-content {
+    padding: 15px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    background-color: var(--background-secondary);
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.t3-attachment-tools-help-note {
+    color: var(--text-warning);
+    margin-top: 20px;
+    font-size: 0.9em;
+    user-select: text;
+}
+
+.t3-attachment-tools-patterns-info {
+    display: none;
+}
+
+.t3-attachment-tools-patterns-control {
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.t3-attachment-tools-pattern-input {
+    width: 100%;
+}
+
+.t3-attachment-tools-pattern-input-spaced {
+    margin-bottom: 8px;
+}

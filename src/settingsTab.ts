@@ -39,27 +39,22 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
 
     private createTokenTable(parent: HTMLElement, title: string, tokens: string[][]): void {
         const box = parent.createDiv();
-        box.style.marginBottom = "20px";
+        box.addClass("t3-attachment-tools-token-section");
         box.createEl("h4", { text: title });
 
         const table = box.createEl("table");
-        table.style.width = "100%";
-        table.style.borderCollapse = "collapse";
-        table.style.fontSize = "0.9em";
+        table.addClass("t3-attachment-tools-token-table");
 
         tokens.forEach(([t, d]) => {
             const tr = table.createEl("tr");
-            tr.style.borderBottom = "1px solid var(--background-modifier-border-focus)";
+            tr.addClass("t3-attachment-tools-token-row");
 
             const td1 = tr.createEl("td");
             const code = td1.createEl("code", { text: t });
-            code.style.userSelect = "text";
-            code.style.cursor = "text";
+            code.addClass("t3-attachment-tools-token-name");
 
             const td2 = tr.createEl("td", { text: " — " + d });
-            td2.style.color = "var(--text-muted)";
-            td2.style.paddingLeft = "8px";
-            td2.style.userSelect = "text";
+            td2.addClass("t3-attachment-tools-token-description");
         });
     }
 
@@ -155,27 +150,23 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
 
         groups.forEach((group: ExampleGroup) => {
             const groupDiv = exampleBox.createDiv();
-            groupDiv.createEl("p", { text: group.title }).style.fontWeight = "bold";
-            groupDiv.style.marginTop = "15px";
+            groupDiv
+                .createEl("p", { text: group.title })
+                .addClass("t3-attachment-tools-example-heading");
+            groupDiv.addClass("t3-attachment-tools-example-group");
 
             group.items.forEach((item: PathExample) => {
                 const wrapper = groupDiv.createDiv();
-                wrapper.style.marginBottom = "12px";
-                wrapper.style.paddingLeft = "12px";
-                wrapper.style.borderLeft = "2px solid var(--interactive-accent)";
+                wrapper.addClass("t3-attachment-tools-example");
 
                 // Logic Description
                 const commentDiv = wrapper.createDiv();
-                commentDiv.style.fontSize = "0.85em";
-                commentDiv.style.fontStyle = "italic";
-                commentDiv.style.color = "var(--text-accent)";
-                commentDiv.style.marginBottom = "4px";
+                commentDiv.addClass("t3-attachment-tools-example-comment");
                 commentDiv.createSpan({ text: `// ${item.comment}` });
 
                 // Original Path Context
                 const line1 = wrapper.createDiv();
-                line1.style.fontSize = "0.8em";
-                line1.style.color = "var(--text-muted)";
+                line1.addClass("t3-attachment-tools-example-context");
                 line1.createSpan({ text: "Original: " + item.pos });
                 if (item.document) {
                     line1.createDiv({ text: "Active document: " + item.document });
@@ -185,16 +176,13 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
                 const line2 = wrapper.createDiv();
                 line2.createSpan({ text: "Input: " });
                 const inputCode = line2.createEl("code", { text: item.input });
-                inputCode.style.userSelect = "text";
-                inputCode.style.backgroundColor = "var(--background-primary-alt)";
+                inputCode.addClass("t3-attachment-tools-example-input");
 
                 // Resulting Path
                 const line3 = wrapper.createDiv();
                 line3.createSpan({ text: "Result: " });
                 const resCode = line3.createEl("code", { text: item.res });
-                resCode.style.color = "var(--text-success)";
-                resCode.style.fontWeight = "bold";
-                resCode.style.userSelect = "text";
+                resCode.addClass("t3-attachment-tools-example-result");
             });
         });
     }
@@ -208,15 +196,10 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         const help = containerEl.createEl("details");
         help.setAttr("open", true);
         help.createEl("summary", { text: "Help: Supported tokens & examples" });
-        help.style.marginBottom = "20px";
+        help.addClass("t3-attachment-tools-help");
 
         const helpContent = help.createDiv();
-        helpContent.style.padding = "15px";
-        helpContent.style.border = "1px solid var(--background-modifier-border)";
-        helpContent.style.borderRadius = "8px";
-        helpContent.style.backgroundColor = "var(--background-secondary)";
-        helpContent.style.userSelect = "text";
-        helpContent.style.webkitUserSelect = "text";
+        helpContent.addClass("t3-attachment-tools-help-content");
 
         this.createTokenTable(helpContent, "Attachment Tokens", [
             ["{name}", 'Filename without extension (e.g. "foo")'],
@@ -254,18 +237,13 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
         const helpNote = helpContent.createEl("p", {
             text: "💡 Note: Paths are absolute if they don't start with ./ or ../",
         });
-        helpNote.style.color = "var(--text-warning)";
-        helpNote.style.marginTop = "20px";
-        helpNote.style.fontSize = "0.9em";
-        helpNote.style.userSelect = "text";
+        helpNote.addClass("t3-attachment-tools-help-note");
 
         containerEl.createEl("h2", { text: "Rename patterns" });
 
         const renameSetting = new Setting(containerEl).setName("");
-        renameSetting.infoEl.style.display = "none";
-        renameSetting.controlEl.style.flex = "1";
-        renameSetting.controlEl.style.flexDirection = "column";
-        renameSetting.controlEl.style.alignItems = "stretch";
+        renameSetting.infoEl.addClass("t3-attachment-tools-patterns-info");
+        renameSetting.controlEl.addClass("t3-attachment-tools-patterns-control");
 
         const templates: (keyof AttachmentToolsSettings)[] = [
             "renamePattern1",
@@ -281,8 +259,8 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
                         (this.plugin.settings as any)[key] = val.trim();
                         await this.plugin.saveSettings();
                     });
-                text.inputEl.style.width = "100%";
-                if (i < 3) text.inputEl.style.marginBottom = "8px";
+                text.inputEl.addClass("t3-attachment-tools-pattern-input");
+                if (i < 3) text.inputEl.addClass("t3-attachment-tools-pattern-input-spaced");
             });
         });
 

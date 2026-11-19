@@ -32,7 +32,8 @@ jobs:
           subject-path: |
             main.js
             manifest.json
+            styles.css
       - name: Publish a new plugin version
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" main.js manifest.json --generate-notes
+        run: gh release create "$GITHUB_REF_NAME" main.js manifest.json styles.css --generate-notes
