@@ -14,15 +14,19 @@
         "dev": "node esbuild.config.mjs --watch",
         "build": "node esbuild.config.mjs",
         "format": "oxfmt",
-        "lint": "oxlint"
+        "lint": "oxlint && eslint \"./src/**/**.ts\"",
+        "eslint": "eslint \"./src/**/**.ts\""
     },
     "devDependencies": {
+        "@stylistic/eslint-plugin": "^6.0.1",
         "@types/node": "^26.6.6",
         "esbuild": "^0.28.2",
         "obsidian": "^1.14.4",
-        "typescript": "^7.0.2",
-        "@stylistic/eslint-plugin": "^6.0.1",
         "oxfmt": "^0.79.0",
-        "oxlint": "^1.94.0"
-    }
+        "oxlint": "^1.94.0",
+        "typescript": "6.0.3",
+        "eslint": "^9.39.5",
+        "eslint-plugin-obsidianmd": "^0.6.0"
+    },
+    "dependencies": {}
 }

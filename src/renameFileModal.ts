@@ -29,7 +29,7 @@ export class RenameFileModal extends Modal {
         contentEl.empty();
 
         contentEl.createEl("h3", { text: "Rename file" });
-        contentEl.createEl("div", {
+        contentEl.createDiv({
             text: `${this.attachment.path} (it's possible to use templates here)`,
             cls: "setting-item-description",
         });
@@ -41,8 +41,8 @@ export class RenameFileModal extends Modal {
         input.style.width = "100%";
         this.inputEl = input;
 
-        this.previewEl1 = contentEl.createEl("div", { cls: "setting-item-description" });
-        this.previewEl2 = contentEl.createEl("div", { cls: "setting-item-description" });
+        this.previewEl1 = contentEl.createDiv({ cls: "setting-item-description" });
+        this.previewEl2 = contentEl.createDiv({ cls: "setting-item-description" });
         this.updatePreview();
 
         input.addEventListener("input", () => {
@@ -63,7 +63,7 @@ export class RenameFileModal extends Modal {
         renameBtn.addEventListener("click", () => void this.submit());
         cancelBtn.addEventListener("click", () => this.close());
 
-        setTimeout(() => {
+        window.setTimeout(() => {
             input.focus();
             const start = 2; // ./
             const end = start + this.attachment.basename.length;
@@ -73,7 +73,7 @@ export class RenameFileModal extends Modal {
 
     private async submit(): Promise<void> {
         const value = (this.inputEl?.value ?? "").trim();
-        var success = await moveFileToNewLocation(
+        const success = await moveFileToNewLocation(
             this.app,
             this.currentDocument,
             this.attachment,
@@ -92,7 +92,7 @@ export class RenameFileModal extends Modal {
             this.attachment,
             this.inputEl?.value ?? "",
         );
-        var pieces = extractPathComponents(formatted);
+        let pieces = extractPathComponents(formatted);
         this.previewEl1?.setText(pieces.path ? `Path: ${pieces.path}` : "");
         this.previewEl2?.setText(
             pieces.filenameWithExtension ? `Name: ${pieces.filenameWithExtension}` : "",

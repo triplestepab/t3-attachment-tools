@@ -87,10 +87,30 @@ export function addMenuItems(
 
     // Generate sample names
 
-    var name1 = generateFormattedPath(currentDocument, file, plugin.settings.renamePattern1, true);
-    var name2 = generateFormattedPath(currentDocument, file, plugin.settings.renamePattern2, true);
-    var name3 = generateFormattedPath(currentDocument, file, plugin.settings.renamePattern3, true);
-    var name4 = generateFormattedPath(currentDocument, file, plugin.settings.renamePattern4, true);
+    const name1 = generateFormattedPath(
+        currentDocument,
+        file,
+        plugin.settings.renamePattern1,
+        true,
+    );
+    const name2 = generateFormattedPath(
+        currentDocument,
+        file,
+        plugin.settings.renamePattern2,
+        true,
+    );
+    const name3 = generateFormattedPath(
+        currentDocument,
+        file,
+        plugin.settings.renamePattern3,
+        true,
+    );
+    const name4 = generateFormattedPath(
+        currentDocument,
+        file,
+        plugin.settings.renamePattern4,
+        true,
+    );
 
     menu.addItem((item) => {
         item.setTitle(file.name).onClick(() => {
@@ -117,7 +137,7 @@ export function addMenuItems(
         if (plugin.settings.renamePattern1) {
             menu.addItem((item) => {
                 item.setTitle(name1).onClick(() =>
-                    moveFileToNewLocation(plugin.app, currentDocument!, file, name1),
+                    moveFileToNewLocation(plugin.app, currentDocument, file, name1),
                 );
             });
         }
@@ -125,7 +145,7 @@ export function addMenuItems(
         if (plugin.settings.renamePattern2) {
             menu.addItem((item) => {
                 item.setTitle(name2).onClick(() =>
-                    moveFileToNewLocation(plugin.app, currentDocument!, file, name2),
+                    moveFileToNewLocation(plugin.app, currentDocument, file, name2),
                 );
             });
         }
@@ -133,7 +153,7 @@ export function addMenuItems(
         if (plugin.settings.renamePattern3) {
             menu.addItem((item) => {
                 item.setTitle(name3).onClick(() =>
-                    moveFileToNewLocation(plugin.app, currentDocument!, file, name3),
+                    moveFileToNewLocation(plugin.app, currentDocument, file, name3),
                 );
             });
         }
@@ -141,7 +161,7 @@ export function addMenuItems(
         if (plugin.settings.renamePattern4) {
             menu.addItem((item) => {
                 item.setTitle(name4).onClick(() =>
-                    moveFileToNewLocation(plugin.app, currentDocument!, file, name4),
+                    moveFileToNewLocation(plugin.app, currentDocument, file, name4),
                 );
             });
         }
@@ -171,7 +191,7 @@ export function addMenuItems(
                 item.setTitle(name1).onClick(() =>
                     moveAllFilesToNewLocation(
                         plugin.app,
-                        currentDocument!,
+                        currentDocument,
                         plugin.settings.renamePattern1,
                     ),
                 );
@@ -183,7 +203,7 @@ export function addMenuItems(
                 item.setTitle(name2).onClick(() =>
                     moveAllFilesToNewLocation(
                         plugin.app,
-                        currentDocument!,
+                        currentDocument,
                         plugin.settings.renamePattern2,
                     ),
                 );
@@ -195,7 +215,7 @@ export function addMenuItems(
                 item.setTitle(name3).onClick(() =>
                     moveAllFilesToNewLocation(
                         plugin.app,
-                        currentDocument!,
+                        currentDocument,
                         plugin.settings.renamePattern3,
                     ),
                 );
@@ -207,7 +227,7 @@ export function addMenuItems(
                 item.setTitle(name4).onClick(() =>
                     moveAllFilesToNewLocation(
                         plugin.app,
-                        currentDocument!,
+                        currentDocument,
                         plugin.settings.renamePattern4,
                     ),
                 );
@@ -220,12 +240,12 @@ export function addMenuItems(
     if (plugin.settings.menuItems.displayDelete) {
         menu.addSeparator();
         menu.addItem((item) => {
-            var message =
+            let message =
                 plugin.settings.deleteMethod === "immediately"
                     ? "Delete immediately"
                     : "Delete to trash";
             item.setTitle(message).onClick(() => {
-                moveFileToTrash(plugin.app, currentDocument!, plugin.settings.deleteMethod, file);
+                moveFileToTrash(plugin.app, currentDocument, plugin.settings.deleteMethod, file);
             });
         });
     }

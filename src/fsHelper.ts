@@ -29,10 +29,10 @@ export async function renameFile(
     console.debug("--- From=" + attachment);
     console.debug("--- locatedAt=" + getFullPath(attachment));
     console.debug("--- newName=" + newName);
-    var caluclatedTarget = combinePath(attachment, newName);
+    const caluclatedTarget = combinePath(attachment, newName);
     console.debug("--- caluclatedTarget=" + caluclatedTarget);
 
-    var parentFolderOfcaluclatedTarget = caluclatedTarget.substring(
+    const parentFolderOfcaluclatedTarget = caluclatedTarget.substring(
         0,
         caluclatedTarget.lastIndexOf("/"),
     );
@@ -130,7 +130,7 @@ export function extractPathComponents(targetPath: string): {
     // Normalize without the leading slash so we can later reapply rootedness
     const normalized = normalizePath(isRooted ? targetPath.slice(1) : targetPath);
 
-    var result = {
+    let result = {
         filename: "",
         filenameWithExtension: "",
         path: isRooted ? "/" : "",

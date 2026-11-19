@@ -23,7 +23,7 @@ export default class AttachmentToolsPlugin extends Plugin {
     async loadSettings(): Promise<void> {
         const settingsOnDisk: Partial<AttachmentToolsSettings> = await this.loadData();
 
-        var defaultSettings: AttachmentToolsSettings = {
+        const defaultSettings: AttachmentToolsSettings = {
             renamePattern1:
                 settingsOnDisk?.renamePattern1 ??
                 settingsOnDisk?.renamePattern1 ??

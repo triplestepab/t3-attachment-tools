@@ -8,7 +8,7 @@ export function findTFileFromHTMLElement(
     plugin: AttachmentToolsPlugin,
     target: HTMLElement,
 ): TFile | undefined {
-    var pictureRelativePath = getRelativePathFromHTMLElement(plugin, target);
+    const pictureRelativePath = getRelativePathFromHTMLElement(plugin, target);
     if (!pictureRelativePath) return undefined;
 
     const file = plugin.app.vault.getAbstractFileByPath(pictureRelativePath);
@@ -29,7 +29,7 @@ export function findTFileFromHTMLElement(
 function getRelativePathFromHTMLElement(plugin: AttachmentToolsPlugin, target: HTMLElement) {
     // Try data-path first (this is exposed in the file tree if you click between the name and the extension)
 
-    var dataPath = target.getAttribute("data-path"); // This is already relative
+    const dataPath = target.getAttribute("data-path"); // This is already relative
     if (dataPath) {
         console.debug("getRelativePath(): Found data-path attribute, using it:", dataPath);
         return dataPath;
@@ -48,12 +48,12 @@ function getRelativePathFromHTMLElement(plugin: AttachmentToolsPlugin, target: H
     // Decode and normalize the path to NFC form (to avoid issues with different unicode representations)
 
     const pathWithoutProtocol = src.replace(/^app:\/\/[\w-]+\//, "");
-    var pictureFullPath = decodeURIComponent(pathWithoutProtocol).split("?")[0].trim();
+    let pictureFullPath = decodeURIComponent(pathWithoutProtocol).split("?")[0].trim();
     pictureFullPath = pictureFullPath.normalize("NFC");
 
     // Make it relative to vault path
 
-    var fullVaultPath = getFullVaultPath(plugin); // full OS path without the leading /
+    const fullVaultPath = getFullVaultPath(plugin); // full OS path without the leading /
     if (!pictureFullPath.startsWith(fullVaultPath)) {
         console.debug("Picture path does not start with vault system path");
         console.debug("Expected vault path: " + fullVaultPath);
@@ -61,6 +61,6 @@ function getRelativePathFromHTMLElement(plugin: AttachmentToolsPlugin, target: H
         return undefined;
     }
 
-    var result = pictureFullPath.substring(fullVaultPath.length).substring(1);
+    const result = pictureFullPath.substring(fullVaultPath.length).substring(1);
     return result;
 }

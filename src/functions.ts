@@ -78,7 +78,7 @@ async function removeLinkFromActiveEditor(
             );
             if (attachedFile?.path === target.path) {
                 // Found the file we're trying to delete
-                var linkInDocument = embed.original; // For exaple "![](Test/Foo/Bar/pic1.png)"
+                const linkInDocument = embed.original; // For exaple "![](Test/Foo/Bar/pic1.png)"
 
                 // Update the document
                 let content = await app.vault.read(currentDocument);
@@ -99,7 +99,7 @@ export async function moveAllFilesToNewLocation(
         const attachment = app.metadataCache.getFirstLinkpathDest(embed.link, currentDocument.path);
 
         if (attachment instanceof TFile) {
-            var newName = generateFormattedPath(currentDocument, attachment, formatTo);
+            let newName = generateFormattedPath(currentDocument, attachment, formatTo);
             await moveFileToNewLocation(app, currentDocument, attachment, newName);
         }
     }
