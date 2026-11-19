@@ -1,16 +1,32 @@
 import { type TFile, normalizePath } from "obsidian";
 
-import { findNextFreeNumber, extractPathComponents } from "./fsHelper.ts";
+import { findNextFreeNumber, extractPathComponents, type Template } from "./fsHelper.ts";
 
 const TOKEN_REGEX = /\{((?:\\[pP]\{[^}]+\}|\\.|\{[^{}]*\}|[^\\{}])*)\}/gi;
+
+export function generatePreview(
+    currentDocument: TFile,
+    picture: TFile,
+    formatTo: Template,
+): Template {
+    return internalFormatter(currentDocument, picture, formatTo, true) as Template;
+}
+
+export function generateFormattedPath(
+    currentDocument: TFile,
+    picture: TFile,
+    formatTo: Template,
+): string {
+    return internalFormatter(currentDocument, picture, formatTo, false);
+}
 
 /**
  * Formats a rename template against a file and returns the resulting path.
  */
-export function generateFormattedPath(
+function internalFormatter(
     currentDocument: TFile,
     picture: TFile,
-    formatTo: string,
+    formatTo: Template,
     isPreview = false,
 ): string {
     if (!formatTo) return picture.path;

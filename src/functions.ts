@@ -2,16 +2,16 @@ import { type App, TFile, Notice } from "obsidian";
 
 import type { DeleteMethod } from "./settings.types.ts";
 
-import { deleteFile, renameFile } from "./fsHelper.ts";
-import { generateFormattedPath } from "./templateHelper.ts";
+import { deleteFile, renameFile, type Template } from "./fsHelper.ts";
 
 /**
  * Moves the file to a new location and refreshes the current document to update the links.
  */
 export async function moveFileToNewLocation(
     app: App,
+    currentDocument: TFile,
     attachment: TFile,
-    newLocation: string,
+    newLocation: Template,
 ): Promise<boolean> {
     if (!newLocation) {
         new Notice("Name cannot be empty");
@@ -19,7 +19,7 @@ export async function moveFileToNewLocation(
     }
 
     try {
-        await renameFile(app, attachment, newLocation);
+        await renameFile(app, currentDocument, attachment, newLocation);
         return true;
     } catch (err: unknown) {
         if (err instanceof Error) {
@@ -91,15 +91,16 @@ async function removeLinkFromActiveEditor(
 export async function moveAllFilesToNewLocation(
     app: App,
     currentDocument: TFile,
-    formatTo: string,
+    formatTo: Template,
 ): Promise<boolean> {
     const cache = app.metadataCache.getFileCache(currentDocument);
+
+    // Loop all
     for (const embed of cache?.embeds ?? []) {
         const attachment = app.metadataCache.getFirstLinkpathDest(embed.link, currentDocument.path);
 
         if (attachment instanceof TFile) {
-            let newName = generateFormattedPath(currentDocument, attachment, formatTo);
-            await moveFileToNewLocation(app, attachment, newName);
+            await moveFileToNewLocation(app, currentDocument, attachment, formatTo);
         }
     }
 

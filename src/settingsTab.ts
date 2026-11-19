@@ -254,7 +254,7 @@ export class AttachmentToolsSettingTab extends PluginSettingTab {
                 text.setPlaceholder(`Pattern ${i + 1} # Comment`)
                     .setValue(this.plugin.settings[key] as string)
                     .onChange(async (val: string) => {
-                        (this.plugin.settings as unknown)[key] = val.trim();
+                        (this.plugin.settings as object)[key] = val.trim();
                         await this.plugin.saveSettings();
                     });
                 text.inputEl.addClass("t3-attachment-tools-pattern-input");

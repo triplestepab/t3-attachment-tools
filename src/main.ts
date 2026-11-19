@@ -1,5 +1,7 @@
 import { Plugin } from "obsidian";
 
+import type { Template } from "./fsHelper.ts";
+
 import { registerImageContextMenu } from "./contextMenu.ts";
 import { type AttachmentToolsSettings } from "./settings.types.ts";
 import { AttachmentToolsSettingTab } from "./settingsTab.ts";
@@ -28,19 +30,19 @@ export default class AttachmentToolsPlugin extends Plugin {
             renamePattern1:
                 settingsOnDisk?.renamePattern1 ??
                 settingsOnDisk?.renamePattern1 ??
-                "{documentpath}/{documentname}-pic-{number}.{extension}",
+                ("{documentpath}/{documentname}-pic-{number}.{extension}" as Template),
             renamePattern2:
                 settingsOnDisk?.renamePattern2 ??
                 settingsOnDisk?.renamePattern2 ??
-                "{documentpath}/pics/{documentname}-pic-{number}.{extension}",
+                ("{documentpath}/pics/{documentname}-pic-{number}.{extension}" as Template),
             renamePattern3:
                 settingsOnDisk?.renamePattern3 ??
                 settingsOnDisk?.renamePattern3 ??
-                "{documentpath}/{lastmodified}_{documentname}.{extension}",
+                ("{documentpath}/{lastmodified}_{documentname}.{extension}" as Template),
             renamePattern4:
                 settingsOnDisk?.renamePattern4 ??
                 settingsOnDisk?.renamePattern4 ??
-                "{documentpath}/{documentname:[a-zA-Z]}-{number}.{extension}",
+                ("{documentpath}/{documentname:[a-zA-Z]}-{number}.{extension}" as Template),
             deleteMethod: settingsOnDisk?.deleteMethod ?? "trash",
             menuItems: settingsOnDisk?.menuItems ?? {
                 displayDelete: false,

@@ -2,7 +2,7 @@ import { Modal, TFile } from "obsidian";
 
 import type AttachmentToolsPlugin from "./main.ts";
 
-import { extractPathComponents } from "./fsHelper.ts";
+import { extractPathComponents, type Template } from "./fsHelper.ts";
 import { moveFileToNewLocation } from "./functions.ts";
 import { generateFormattedPath } from "./templateHelper.ts";
 export class RenameFileModal extends Modal {
@@ -72,8 +72,13 @@ export class RenameFileModal extends Modal {
     }
 
     private async submit(): Promise<void> {
-        const value = (this.inputEl?.value ?? "").trim();
-        const success = await moveFileToNewLocation(this.app, this.attachment, value);
+        const value = (this.inputEl?.value ?? "").trim() as Template;
+        const success = await moveFileToNewLocation(
+            this.app,
+            this.currentDocument,
+            this.attachment,
+            value,
+        );
         if (success) this.close();
     }
 
@@ -82,11 +87,8 @@ export class RenameFileModal extends Modal {
     }
 
     private updatePreview(): void {
-        const formatted = generateFormattedPath(
-            this.currentDocument,
-            this.attachment,
-            this.inputEl?.value ?? "",
-        );
+        const value = (this.inputEl?.value ?? "").trim() as Template;
+        const formatted = generateFormattedPath(this.currentDocument, this.attachment, value);
         let pieces = extractPathComponents(formatted);
         this.previewEl1?.setText(pieces.path ? `Path: ${pieces.path}` : "");
         this.previewEl2?.setText(

@@ -3,6 +3,10 @@ import { FileSystemAdapter, normalizePath, TFile, TFolder, type App } from "obsi
 import type AttachmentToolsPlugin from "./main.ts";
 import type { DeleteMethod } from "./settings.types.ts";
 
+import { generateFormattedPath } from "./templateHelper.ts";
+
+export type Template = Brand<"string", "Route">;
+
 /**
  * Get full vault path by decoding the resource path and stripping the "app://local/" prefix.
 x */
@@ -19,23 +23,49 @@ export function getFullVaultPath(plugin: AttachmentToolsPlugin): string {
 /**
  * Renames a file to a new name or path. Handles both absolute and relative paths.
  */
-export async function renameFile(app: App, attachment: TFile, newName: string): Promise<TFile> {
+export async function renameFile(
+    app: App,
+    currentDocument: TFile,
+    attachment: TFile,
+    template: Template,
+): Promise<TFile> {
     console.debug("renameFile(): Starting rename process");
-    console.debug("--- From=" + attachment.basename);
-    console.debug("--- locatedAt=" + getFullPath(attachment));
-    console.debug("--- newName=" + newName);
-    const caluclatedTarget = combinePath(attachment, newName);
-    console.debug("--- caluclatedTarget=" + caluclatedTarget);
 
-    const parentFolderOfcaluclatedTarget = caluclatedTarget.substring(
-        0,
-        caluclatedTarget.lastIndexOf("/"),
+    let formattedName = generateFormattedPath(currentDocument, attachment, template);
+    const destinationFileName = combinePath(attachment, formattedName);
+
+    console.debug(
+        JSON.stringify(
+            {
+                sourceOSPath: getFullPath(attachment),
+                source: {
+                    path: attachment.path,
+                    name: attachment.name,
+                },
+                template,
+                destination: {
+                    formatted: formattedName,
+                    path: destinationFileName,
+                },
+            },
+            null,
+            2,
+        ),
     );
-    await createFolderIfNotFound(app, parentFolderOfcaluclatedTarget);
 
-    await app.fileManager.renameFile(attachment, caluclatedTarget);
-    const renamed = app.vault.getAbstractFileByPath(caluclatedTarget);
-    if (!(renamed instanceof TFile)) throw new Error("Rename succeeded but file was not found");
+    // Skip rename?
+
+    if (attachment.path == destinationFileName) {
+        console.debug("No need to rename; file is already named correctly.");
+        return attachment;
+    }
+
+    // Rename
+
+    const parentFolder = destinationFileName.substring(0, destinationFileName.lastIndexOf("/"));
+    await createFolderIfNotFound(app, parentFolder);
+    await app.fileManager.renameFile(attachment, destinationFileName);
+
     return attachment;
 }
 
@@ -165,15 +195,17 @@ export function extractPathComponents(targetPath: string): {
  * Creates a folder if it doesn't exist. If a file exists at the path, an error is thrown.
  */
 async function createFolderIfNotFound(app: App, folderPath: string): Promise<void> {
+    console.debug("createFolderIfNotFound(): Checking folder path " + folderPath);
+
     const path = normalizePath(folderPath);
     if (!path || path === "/") return;
 
-    const folder = app.vault.getAbstractFileByPath(path);
+    const stat = await app.vault.adapter.stat(path);
 
-    if (!folder) {
+    if (!stat) {
         console.debug("createFolderIfNotFound(): Creating folder at " + path);
         await app.vault.createFolder(path);
-    } else if (!(folder instanceof TFolder)) {
+    } else if (stat.type !== "folder") {
         throw new Error(`Conflict: '${path}' is a file`);
     }
 }

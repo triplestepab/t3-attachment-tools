@@ -2,7 +2,7 @@
     "id": "t-three-attachment-tools",
     "name": "T3 Attachment Tools",
     "version": "1.0.6",
-    "minAppVersion": "1.5.0",
+    "minAppVersion": "1.5.7",
     "description": "Context menu actions for attachments.",
     "author": "Tomas Nilsson",
     "authorUrl": "https://triplestep.se",

@@ -5,7 +5,7 @@ import type AttachmentToolsPlugin from "./main.ts";
 import { moveAllFilesToNewLocation, moveFileToNewLocation, moveFileToTrash } from "./functions.ts";
 import { findTFileFromHTMLElement } from "./imgHelper.ts";
 import { RenameFileModal } from "./renameFileModal.ts";
-import { generateFormattedPath } from "./templateHelper.ts";
+import { generatePreview } from "./templateHelper.ts";
 
 /**
  * Register a context menu.
@@ -87,30 +87,10 @@ export function addMenuItems(
 
     // Generate sample names
 
-    const name1 = generateFormattedPath(
-        currentDocument,
-        file,
-        plugin.settings.renamePattern1,
-        true,
-    );
-    const name2 = generateFormattedPath(
-        currentDocument,
-        file,
-        plugin.settings.renamePattern2,
-        true,
-    );
-    const name3 = generateFormattedPath(
-        currentDocument,
-        file,
-        plugin.settings.renamePattern3,
-        true,
-    );
-    const name4 = generateFormattedPath(
-        currentDocument,
-        file,
-        plugin.settings.renamePattern4,
-        true,
-    );
+    const name1 = generatePreview(currentDocument, file, plugin.settings.renamePattern1);
+    const name2 = generatePreview(currentDocument, file, plugin.settings.renamePattern2);
+    const name3 = generatePreview(currentDocument, file, plugin.settings.renamePattern3);
+    const name4 = generatePreview(currentDocument, file, plugin.settings.renamePattern4);
 
     menu.addItem((item) => {
         item.setTitle(file.name).onClick(() => {
@@ -136,25 +116,33 @@ export function addMenuItems(
 
         if (plugin.settings.renamePattern1) {
             menu.addItem((item) => {
-                item.setTitle(name1).onClick(() => moveFileToNewLocation(plugin.app, file, name1));
+                item.setTitle(name1).onClick(() =>
+                    moveFileToNewLocation(plugin.app, currentDocument, file, name1),
+                );
             });
         }
 
         if (plugin.settings.renamePattern2) {
             menu.addItem((item) => {
-                item.setTitle(name2).onClick(() => moveFileToNewLocation(plugin.app, file, name2));
+                item.setTitle(name2).onClick(() =>
+                    moveFileToNewLocation(plugin.app, currentDocument, file, name2),
+                );
             });
         }
 
         if (plugin.settings.renamePattern3) {
             menu.addItem((item) => {
-                item.setTitle(name3).onClick(() => moveFileToNewLocation(plugin.app, file, name3));
+                item.setTitle(name3).onClick(() =>
+                    moveFileToNewLocation(plugin.app, currentDocument, file, name3),
+                );
             });
         }
 
         if (plugin.settings.renamePattern4) {
             menu.addItem((item) => {
-                item.setTitle(name4).onClick(() => moveFileToNewLocation(plugin.app, file, name4));
+                item.setTitle(name4).onClick(() =>
+                    moveFileToNewLocation(plugin.app, currentDocument, file, name4),
+                );
             });
         }
     }
